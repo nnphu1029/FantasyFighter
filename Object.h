@@ -6,8 +6,7 @@
 #include<iostream>
 #include<SDL_image.h>
 #include "const.h"
-#define fi first
-#define se second
+#include "Object.h"
 using namespace std;
 
 extern SDL_Renderer* gRenderer;
@@ -18,7 +17,11 @@ class Object{
         SDL_Texture* oTexture;
         int oWidth , oHeight , frame , maxJump;
         bool checkDoubleJump;
-        bool canAttack2;
+        int multiAttack;
+// UPDATE FUNCTION REQUIRED
+        void Gravity();
+        void xUpdate();
+        void yUpdate();
     public:
 // PUBLIC INDEX
         int heroCode;
@@ -41,10 +44,8 @@ class Object{
         void Hurt();
         void Stun();
         void Dead();
-// UPDATE FUNCTION REQUIRED
-        void Gravity();
-        void xUpdate();
-        void yUpdate();
+// UPDATE FUNCTION
+        void updateDirection(int,int);
         void movementUpdate(int , int , int);
 // LOADING FUNCTION
         bool loadFromFile(string);

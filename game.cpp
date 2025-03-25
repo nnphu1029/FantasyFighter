@@ -1,16 +1,7 @@
-#include <SDL.h>
-#include <SDL_image.h>
-#include <stdio.h>
-#include <string>
-#include "const.h"
-#include "init.h"
-#include "Object.h"
-#include "Interact.h"
 #include "game.h"
-#define fi first
-#define se second
 
 void mainGame(){
+    int currentFrameTime, frameTime;
     bool quitGame = false;
     while(!quitGame){
         currentFrameTime = SDL_GetTicks();
@@ -49,10 +40,7 @@ void mainGame(){
                 }
             }
         }
-        if(quitFantasyFighter == true){
-            continue;
-        }
-    //UPDATE CHARACTER
+        //UPDATE CHARACTER
         player1.objectFlag = SDL_GetKeyboardState(NULL);
         player2.objectFlag = SDL_GetKeyboardState(NULL);
 
@@ -65,25 +53,8 @@ void mainGame(){
             player1.movementUpdate(FRAME_SIZE , FRAME_SIZE , 1);
         }
 
-        if(player1.Status == MOVEMENT_ATTACK or player2.Status == MOVEMENT_ATTACK){
-            interactProcess();
-        }
+        interactProcess();
 
-        P1_Symbol.render(player1.oX + HeroLists[player1.heroCode].body.x,
-                         player1.oY + (HeroLists[player1.heroCode].body.y - 26), 0 , 0 ,25,26,0);
-        P2_Symbol.render(player2.oX + HeroLists[player2.heroCode].body.x,
-                         player2.oY + (HeroLists[player2.heroCode].body.y - 26), 0 , 0 ,25,26,0);
-        renderHPBar(100 - player1.HP , 1);
-        renderHPBar(100 - player2.HP , 2);
-
-        if(player1.HP <= 0 or player2.HP <= 0){
-            if(player1.HP <= 0){
-                player1.Dead();
-            }
-            if(player2.HP <= 0){
-                player2.Dead();
-            }
-        }
     // PRESENT RENDERER
         SDL_RenderPresent(gRenderer);
     // MANAGE FPS
@@ -92,6 +63,26 @@ void mainGame(){
             SDL_Delay(TARGET_FRAME_TIME - frameTime);
         }
     }
-    EndGame();
+    closeMainGame();
     return;
+}
+
+void closeMainGame(){
+    if(gTexture != NULL){
+        SDL_DestroyTexture(gTexture);
+        gTexture = NULL;
+    }
+    if(P1_HpBar != NULL){
+        SDL_DestroyTexture(P1_HpBar);
+        P1_HpBar = NULL;
+    }
+    if(P2_HpBar != NULL){
+        SDL_DestroyTexture(P2_HpBar);
+        P2_HpBar = NULL;
+    }
+    player1.deleteObject();
+    player2.deleteObject();
+
+    P1_Symbol.deleteObject();
+    P2_Symbol.deleteObject();
 }

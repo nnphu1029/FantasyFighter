@@ -1,5 +1,6 @@
 #ifndef const_H
 #define const_H
+#include <SDL.h>
 #include<string>
 using namespace std;
 
@@ -46,8 +47,9 @@ enum Hero{
 };
 
 enum GameState{
-    OPENING,
+    INTRO,
     MENU,
+    OPENING,
     MAINGAME,
     EXIT,
     TOTAL_STATE
@@ -66,7 +68,7 @@ struct HeroInfo{
 };
 
 const HeroInfo HeroLists[TOTAL_HEROS - 1] = {
-    {"image/FantasyWarrior.png" , 18 , 6 , 6 , 6 , {90 , 60 , 120 , 110}  , 3 , 6 , {115 , 85 , 30 , 70}},
+    {"image/FantasyWarrior.png" , 18 , 6 , 6 , 10 , {90 , 60 , 120 , 110}  , 3 , 6 , {115 , 85 , 30 , 70}},
 //    {"image/SamuraiMartialHero2.png" , 8 , 4 , 4 , 0 , 3 , 6},
     {"image/SamuraiMartialHero.png", 12 , 6 , 6 ,  0 , {100 , 65 , 133 , 87},  4 , 6, {115 , 86 , 20 , 70}}
 };

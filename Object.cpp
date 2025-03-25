@@ -1,7 +1,4 @@
-#include<SDL.h>
-#include<SDL_image.h>
 #include "Object.h"
-#include "const.h"
 
 Object::Object(int type){
     heroCode = 0;
@@ -16,7 +13,7 @@ Object::Object(int type){
         Status = MOVEMENT_IDLE;
         maxJump = PLAYERY;
         checkDoubleJump = false;
-        canAttack2 = false;
+        multiAttack = 0;
         frame = FRAMERESET;
         Direction = DIRECTION_RIGHT * (type == 1) + DIRECTION_LEFT * (type == 2);
     }
@@ -58,11 +55,16 @@ void Object::Jump(){
 void Object::Attack(){
     if(Status == MOVEMENT_DEATH or Status == MOVEMENT_HURT) return;
     if(Status == MOVEMENT_ATTACK){
-        canAttack2 = true;
+        Status = MOVEMENT_ATTACK;
+        if(multiAttack == 1 and HeroLists[heroCode].AttackFrame2 == 0) return;
+        if(multiAttack == 2 and HeroLists[heroCode].AttackFrame3 == 0) return;
+        multiAttack = min(multiAttack + 1,3);
+
         return;
     }
     else{
         beginCastTime = SDL_GetTicks();
+        multiAttack = 1;
     }
     Status = MOVEMENT_ATTACK;
     frame = FRAMERESET;
@@ -70,8 +72,8 @@ void Object::Attack(){
 
 void Object::Hurt(){
     if(Status == MOVEMENT_DEATH or Status == MOVEMENT_HURT) return;
-        Status = MOVEMENT_HURT;
-        frame = FRAMERESET;
+    Status = MOVEMENT_HURT;
+    frame = FRAMERESET;
 }
 
 void Object::Stun(){
@@ -126,8 +128,8 @@ void Object::Gravity(){
 
 void Object::xUpdate(){
     oX = oX + (int)veloX;
-    oX = max(oX , 0);
-    oX = min(oX , 950);
+    oX = max(oX , -100);
+    oX = min(oX , 1050);
 }
 
 void Object::yUpdate(){
@@ -137,29 +139,45 @@ void Object::yUpdate(){
 }
 
 void Object::movementUpdate(int frameWidth , int frameHeight, int type){
-    int currentStatus;
+    int currentStatus = MOVEMENT_IDLE;
     if(Status != MOVEMENT_DEATH){
         if(Status == MOVEMENT_ATTACK){
             frame = frame + 1;
-            if(canAttack2 == false and (frame == HeroLists[heroCode].AttackFrame1)){
+            if(multiAttack == 1 and (frame == HeroLists[heroCode].AttackFrame1)){
                 endCastTime = SDL_GetTicks();
                 if(endCastTime - beginCastTime < ATTACKTIME){
                     frame -= 1;
                 }
                 else{
                     Status = MOVEMENT_IDLE;
+                    multiAttack = 0;
+                    frame = FRAMERESET;
                     return;
                 }
             }
 
-            if(canAttack2 == true and (frame == HeroLists[heroCode].AttackFrame1 + HeroLists[heroCode].AttackFrame2)){
+            if(multiAttack == 2 and (frame == HeroLists[heroCode].AttackFrame1 + HeroLists[heroCode].AttackFrame2)){
+                if(HeroLists[heroCode].AttackFrame2 != 0)
                 endCastTime = SDL_GetTicks();
                 if(endCastTime - beginCastTime < ATTACKTIME*2){
                     frame -= 1;
                 }
                 else{
                     Status = MOVEMENT_IDLE;
-                    canAttack2 = false;
+                    multiAttack = 0;
+                    frame = FRAMERESET;
+                    return;
+                }
+            }
+            if(multiAttack == 3 and (frame == HeroLists[heroCode].AttackFrame1 + HeroLists[heroCode].AttackFrame2 + HeroLists[heroCode].AttackFrame3)){
+                endCastTime = SDL_GetTicks();
+                if(endCastTime - beginCastTime < ATTACKTIME*3){
+                    frame -= 1;
+                }
+                else{
+                    Status = MOVEMENT_IDLE;
+                    multiAttack = 0;
+                    frame = FRAMERESET;
                     return;
                 }
             }
@@ -229,7 +247,7 @@ void Object::movementUpdate(int frameWidth , int frameHeight, int type){
             frame -= 1;
         }
     }
-    render(oX , oY  , (frame * 250),  (currentStatus * 250) , 250 , HeroLists[heroCode].body.h + HeroLists[heroCode].body.y, 1 * (Direction == DIRECTION_LEFT));
+    render(oX , oY  , (frame * 250) ,  (currentStatus * 250) , 250, HeroLists[heroCode].body.h + HeroLists[heroCode].body.y, 1 * (Direction == DIRECTION_LEFT));
 }
 
 void Object::render( int a, int b, int x, int y, int iWidth, int iHeight, int checkFlip) {
@@ -246,6 +264,20 @@ void Object::render( int a, int b, int x, int y, int iWidth, int iHeight, int ch
         }
         else{
             SDL_RenderCopyEx(gRenderer, oTexture,&renderObject , &renderTexture,0,NULL,SDL_FLIP_HORIZONTAL);
+        }
+    }
+}
+
+void Object::updateDirection(int a , int b){
+    if(Status != MOVEMENT_IDLE) return;
+    if(Direction == DIRECTION_LEFT){
+        if(oX < a){
+            Direction = DIRECTION_RIGHT;
+        }
+    }
+    if(Direction == DIRECTION_RIGHT){
+        if(a < oY){
+            Direction = DIRECTION_LEFT;
         }
     }
 }
@@ -288,7 +320,7 @@ void Object::deleteObject(){
         Status = 0;
         maxJump = 0;
         checkDoubleJump = false;
-        canAttack2 = false;
+        multiAttack = 0;
     }
 }
 

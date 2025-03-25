@@ -8,7 +8,7 @@
 #include "const.h"
 #include "Object.h"
 #include "Interact.h"
-
+#include "init.h"
 
 extern SDL_Renderer* gRenderer;
 extern SDL_Texture* gTexture;
@@ -22,7 +22,6 @@ extern Object P1_Symbol;
 extern Object P2_Symbol;
 
 
-extern int currentFrameTime , frameTime;
 extern SDL_Event FantasyFighter;
 extern bool quitFantasyFighter;
 extern int orderRender;
@@ -30,5 +29,6 @@ extern int orderRender;
 extern bool check;
 
 void mainGame();
+void closeMainGame();
 
 #endif // GAME_H

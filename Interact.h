@@ -10,13 +10,21 @@
 #define fi first
 #define se second
 
-extern Object player1;
-extern Object player2;
-extern int orderRender;
+
 extern SDL_Texture* P1_HpBar;
 extern SDL_Texture* P2_HpBar;
+extern Object player1;
+extern Object player2;
+extern Object P1_Symbol;
+extern Object P2_Symbol;
+extern int orderRender;
+
+
 
 void interactProcess();
+
+void checkHit();
+
 void renderHPBar(int , int);
 
 

@@ -6,10 +6,10 @@
 
 #include "const.h"
 #include "init.h"
-#include "Object.h"
-#include "Interact.h"
-#include "game.h"
+
+#include "intro.h"
 #include "opening.h"
+#include "game.h"
 
 #define fi first
 #define se second
@@ -20,12 +20,10 @@ bool check = false;
 SDL_Window* window = NULL;
 SDL_Renderer* gRenderer = NULL;
 SDL_Texture* gTexture = NULL;
-
+SDL_Texture* introTexture = NULL;
 //HP BAR AND SYMBOL
 SDL_Texture* P1_HpBar = NULL;
 SDL_Texture* P2_HpBar = NULL;
-
-int currentFrameTime , frameTime;
 
 SDL_Event FantasyFighter;
 
@@ -39,7 +37,7 @@ Object player2(2);
 Object P1_Symbol(0);
 Object P2_Symbol(0);
 int orderRender = 1;
-int currentState = OPENING;
+int currentState = INTRO;
 
 int main(int argc, char* args[]){
     int x = -1, y = -1;
@@ -67,10 +65,13 @@ int main(int argc, char* args[]){
             }
         }
         switch(currentState){
-            case OPENING:
-                renderOpening();
+            case INTRO:
+                renderIntro();
                 break;
             case MENU:
+                break;
+            case OPENING:
+                renderOpening();
                 break;
             case MAINGAME:
                 mainGame();
@@ -79,6 +80,7 @@ int main(int argc, char* args[]){
                 break;
         }
     }
+    EndGame();
     return 0;
 }
 

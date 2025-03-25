@@ -1,12 +1,5 @@
 #include "init.h"
-#include "const.h"
-#include "Object.h"
 
-extern Object player1;
-extern Object player2;
-extern Object P1_Symbol;
-extern Object P2_Symbol;
-extern Object openingTheme;
 
 void Init(){
     check = true;

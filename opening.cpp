@@ -1,13 +1,7 @@
-#include <SDL.h>
-#include <SDL_image.h>
-#include <stdio.h>
-#include <string>
-#include "const.h"
 #include "opening.h"
 
-extern Object openingTheme;
-
 void renderOpening(){
+    int currentFrameTime , frameTime;
     bool quitOpening = false;
     int Oframe = FRAMERESET;
     while(!quitOpening){
