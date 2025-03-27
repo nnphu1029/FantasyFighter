@@ -1,7 +1,8 @@
 #ifndef const_H
 #define const_H
-#include <SDL.h>
+
 #include<string>
+#include<SDL.h>
 using namespace std;
 
 // SCREEN SIZE
@@ -38,13 +39,13 @@ const int MOVEMENT_DEATH = 6;
 const int DIRECTION_RIGHT = 1;
 const int DIRECTION_LEFT = -1;
 
-// HERO LISTS
-enum Hero{
-    FantasyWarrior,
-    SamuraiMartialHero2,
-    SamuraiMartialHero,
-    TOTAL_HEROS
-};
+//// HERO LISTS
+//enum Hero{
+//    FantasyWarrior,
+//    SamuraiMartialHero2,
+//    SamuraiMartialHero,
+//    TOTAL_HEROS
+//};
 
 enum GameState{
     INTRO,
@@ -55,22 +56,28 @@ enum GameState{
     TOTAL_STATE
 };
 
-struct HeroInfo{
-    string filename;
-    int TotalFrame;
-    int AttackFrame1;
-    int AttackFrame2;
-    int AttackFrame3;
-    SDL_Rect hitAOE;
-    int HurtFrame;
-    int DeadFrame;
-    SDL_Rect body;
-};
+//struct skill{
+//    SDL_Rect hitAOE;
+//    int numberFrame;
+//    int dame;
+//};
+//
+//struct HeroSpec{
+//    string filename;
+//    int TotalFrame;
+//    int AttackFrame1;
+//    int AttackFrame2;
+//    int AttackFrame3;
+//    SDL_Rect hitAOE;
+//    int HurtFrame;
+//    int DeadFrame;
+//    SDL_Rect body;
+//};
+//
+//const HeroSpec HeroLists[TOTAL_HEROS - 1] = {
+//    {"image/FantasyWarrior.png" , 18 , 6 , 6 , 10 , {90 , 60 , 120 , 110}  , 3 , 7 , {115 , 85 , 30 , 70}},
+//    {"image/SamuraiMartialHero.png", 12 , 6 , 6 ,  0 , {100 , 65 , 133 , 87},  4 , 6, {115 , 86 , 20 , 70}}
+//};
 
-const HeroInfo HeroLists[TOTAL_HEROS - 1] = {
-    {"image/FantasyWarrior.png" , 18 , 6 , 6 , 10 , {90 , 60 , 120 , 110}  , 3 , 6 , {115 , 85 , 30 , 70}},
-//    {"image/SamuraiMartialHero2.png" , 8 , 4 , 4 , 0 , 3 , 6},
-    {"image/SamuraiMartialHero.png", 12 , 6 , 6 ,  0 , {100 , 65 , 133 , 87},  4 , 6, {115 , 86 , 20 , 70}}
-};
 
 #endif

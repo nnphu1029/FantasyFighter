@@ -31,11 +31,12 @@ bool quitFantasyFighter = false;
 bool quitMenu = false;
 
 Object openingTheme(0);
-
+Object startButton(0);
 Object player1(1);
 Object player2(2);
 Object P1_Symbol(0);
 Object P2_Symbol(0);
+
 int orderRender = 1;
 int currentState = INTRO;
 

@@ -37,6 +37,10 @@ void mainGame(){
                         quitGame = true;
                         quitFantasyFighter = true;
                         break;
+//                    case SDLK_t:
+//                        player1.HP = 0;
+//                        player2.HP = 0;
+//                        break;
                 }
             }
         }
@@ -54,7 +58,7 @@ void mainGame(){
         }
 
         interactProcess();
-
+        cout << player1.HP << " " << player2.HP << endl;
     // PRESENT RENDERER
         SDL_RenderPresent(gRenderer);
     // MANAGE FPS

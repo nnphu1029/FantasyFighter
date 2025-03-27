@@ -11,8 +11,11 @@ extern bool check;
 extern SDL_Event FantasyFighter;
 extern bool quitFantasyFighter;
 extern int currentState;
+extern Object startButton;
 
 extern SDL_Texture* introTexture;
+
+void loadIntroResource();
 
 void renderIntro();
 

@@ -14,6 +14,7 @@ Object::Object(int type){
         maxJump = PLAYERY;
         checkDoubleJump = false;
         multiAttack = 0;
+        checkHurt = false;
         frame = FRAMERESET;
         Direction = DIRECTION_RIGHT * (type == 1) + DIRECTION_LEFT * (type == 2);
     }
@@ -23,6 +24,7 @@ Object::Object(int type){
 int Object::getWidth(){ return oWidth;}
 
 int Object::getHeight(){ return oHeight;}
+int Object::getMultiAttack(){ return multiAttack;}
 
 SDL_Texture* Object::getTexture(){ return oTexture;}
 
@@ -35,7 +37,9 @@ void Object::Dash(){
     else{
         veloX = 100;
     }
+    Status = MOVEMENT_JUMP;
     xUpdate();
+    frame = FRAMERESET;
 }
 
 
@@ -55,23 +59,26 @@ void Object::Jump(){
 void Object::Attack(){
     if(Status == MOVEMENT_DEATH or Status == MOVEMENT_HURT) return;
     if(Status == MOVEMENT_ATTACK){
-        Status = MOVEMENT_ATTACK;
-        if(multiAttack == 1 and HeroLists[heroCode].AttackFrame2 == 0) return;
-        if(multiAttack == 2 and HeroLists[heroCode].AttackFrame3 == 0) return;
+        if(multiAttack == 1 and HeroData[heroCode].AttackFrame2.numberFrame == 0) return;
+        if(multiAttack == 2 and HeroData[heroCode].AttackFrame3.numberFrame == 0) return;
         multiAttack = min(multiAttack + 1,3);
-
         return;
     }
     else{
         beginCastTime = SDL_GetTicks();
         multiAttack = 1;
+
     }
     Status = MOVEMENT_ATTACK;
     frame = FRAMERESET;
 }
 
-void Object::Hurt(){
-    if(Status == MOVEMENT_DEATH or Status == MOVEMENT_HURT) return;
+void Object::Hurt(int dame){
+    if(Status == MOVEMENT_DEATH or Status == MOVEMENT_HURT or checkHurt == true) return;
+    veloX = 0;
+    veloY = 0;
+    checkHurt = true;
+    HP = max(0,HP - dame);
     Status = MOVEMENT_HURT;
     frame = FRAMERESET;
 }
@@ -106,6 +113,9 @@ void Object::Gravity(){
         }
     }
     else if(oY < PLAYERY){
+        if(Status == MOVEMENT_ATTACK){
+            maxJump = max(oY - 75,0);
+        }
         if(oY > maxJump){
             if(veloY < 0){
                 veloY = veloY - gravityAccel;
@@ -138,12 +148,43 @@ void Object::yUpdate(){
     oY = max(oY , 0);
 }
 
+void Object::updateHitBox(int frameWidth, int frameHeight){
+    switch (multiAttack){
+        case 1:
+            if(Direction == DIRECTION_RIGHT){
+                hitbox = {oX + HeroData[heroCode].AttackFrame1.hitAOE.x , oY , HeroData[heroCode].AttackFrame1.hitAOE.w , HeroData[heroCode].AttackFrame1.hitAOE.h};
+            }
+            else{
+                hitbox = {oX + frameWidth - HeroData[heroCode].AttackFrame1.hitAOE.x - HeroData[heroCode].AttackFrame1.hitAOE.w, oY , HeroData[heroCode].AttackFrame1.hitAOE.w , HeroData[heroCode].AttackFrame1.hitAOE.h};
+            }
+            break;
+        case 2:
+            if(Direction == DIRECTION_RIGHT){
+                hitbox = {oX + HeroData[heroCode].AttackFrame2.hitAOE.x , oY , HeroData[heroCode].AttackFrame2.hitAOE.w , HeroData[heroCode].AttackFrame2.hitAOE.h};
+            }
+            else{
+                hitbox = {oX + frameWidth - HeroData[heroCode].AttackFrame2.hitAOE.x - HeroData[heroCode].AttackFrame2.hitAOE.w, oY , HeroData[heroCode].AttackFrame2.hitAOE.w , HeroData[heroCode].AttackFrame2.hitAOE.h};
+            }
+            break;
+        case 3:
+            if(Direction == DIRECTION_RIGHT){
+                hitbox = {oX + HeroData[heroCode].AttackFrame3.hitAOE.x , oY , HeroData[heroCode].AttackFrame3.hitAOE.w , HeroData[heroCode].AttackFrame3.hitAOE.h};
+            }
+            else{
+                hitbox = {oX + frameWidth - HeroData[heroCode].AttackFrame3.hitAOE.x - HeroData[heroCode].AttackFrame3.hitAOE.w, oY , HeroData[heroCode].AttackFrame3.hitAOE.w , HeroData[heroCode].AttackFrame3.hitAOE.h};
+            }
+            break;
+        default:
+            break;
+    }
+}
+
 void Object::movementUpdate(int frameWidth , int frameHeight, int type){
     int currentStatus = MOVEMENT_IDLE;
     if(Status != MOVEMENT_DEATH){
         if(Status == MOVEMENT_ATTACK){
             frame = frame + 1;
-            if(multiAttack == 1 and (frame == HeroLists[heroCode].AttackFrame1)){
+            if(multiAttack == 1 and (frame == HeroData[heroCode].AttackFrame1.numberFrame)){
                 endCastTime = SDL_GetTicks();
                 if(endCastTime - beginCastTime < ATTACKTIME){
                     frame -= 1;
@@ -156,8 +197,8 @@ void Object::movementUpdate(int frameWidth , int frameHeight, int type){
                 }
             }
 
-            if(multiAttack == 2 and (frame == HeroLists[heroCode].AttackFrame1 + HeroLists[heroCode].AttackFrame2)){
-                if(HeroLists[heroCode].AttackFrame2 != 0)
+            if(multiAttack == 2 and (frame == HeroData[heroCode].AttackFrame1.numberFrame +
+                                              HeroData[heroCode].AttackFrame2.numberFrame)){
                 endCastTime = SDL_GetTicks();
                 if(endCastTime - beginCastTime < ATTACKTIME*2){
                     frame -= 1;
@@ -169,7 +210,9 @@ void Object::movementUpdate(int frameWidth , int frameHeight, int type){
                     return;
                 }
             }
-            if(multiAttack == 3 and (frame == HeroLists[heroCode].AttackFrame1 + HeroLists[heroCode].AttackFrame2 + HeroLists[heroCode].AttackFrame3)){
+            if(multiAttack == 3 and (frame == HeroData[heroCode].AttackFrame1.numberFrame +
+                                              HeroData[heroCode].AttackFrame2.numberFrame +
+                                              HeroData[heroCode].AttackFrame3.numberFrame)){
                 endCastTime = SDL_GetTicks();
                 if(endCastTime - beginCastTime < ATTACKTIME*3){
                     frame -= 1;
@@ -181,17 +224,12 @@ void Object::movementUpdate(int frameWidth , int frameHeight, int type){
                     return;
                 }
             }
-            if(Direction == DIRECTION_RIGHT){
-                hitbox = {oX + HeroLists[heroCode].hitAOE.x , oY , HeroLists[heroCode].hitAOE.w , HeroLists[heroCode].hitAOE.h};
-            }
-            else{
-                hitbox = {oX + frameWidth - HeroLists[heroCode].hitAOE.x - HeroLists[heroCode].hitAOE.w, oY , HeroLists[heroCode].hitAOE.w , HeroLists[heroCode].hitAOE.h};
-            }
+            updateHitBox(frameWidth,frameHeight);
         }
         else if(Status == MOVEMENT_HURT){
-            frame = frame + 1;
-            if(frame == HeroLists[heroCode].HurtFrame){
-                HP -= 1;
+            frame = (frame + 1);
+            if(frame == HeroData[heroCode].HurtFrame){
+                checkHurt = false;
                 Status = MOVEMENT_IDLE;
                 return;
             }
@@ -229,25 +267,25 @@ void Object::movementUpdate(int frameWidth , int frameHeight, int type){
         else{
             if(veloY > 0) currentStatus = MOVEMENT_FALL;
             else if(veloY < 0) currentStatus = MOVEMENT_JUMP;
-            frame = (frame + 1)%HeroLists[heroCode].TotalFrame;
+            frame = (frame + 1)%HeroData[heroCode].TotalFrame;
             xUpdate();
         }
         yUpdate();
         if(Direction == DIRECTION_RIGHT){
-            mainBody = {oX + HeroLists[heroCode].body.x,oY,HeroLists[heroCode].body.w,HeroLists[heroCode].body.h};
+            mainBody = {oX + HeroData[heroCode].body.x,oY,HeroData[heroCode].body.w,HeroData[heroCode].body.h};
         }
         else{
-            mainBody = {oX + frameWidth - HeroLists[heroCode].body.x - HeroLists[heroCode].body.w, oY , HeroLists[heroCode].body.w,HeroLists[heroCode].body.h};
+            mainBody = {oX + frameWidth - HeroData[heroCode].body.x - HeroData[heroCode].body.w, oY , HeroData[heroCode].body.w,HeroData[heroCode].body.h};
         }
     }
     else{
         currentStatus = Status;
         frame = frame + 1;
-        if(frame == HeroLists[heroCode].DeadFrame){
+        if(frame == HeroData[heroCode].DeadFrame){
             frame -= 1;
         }
     }
-    render(oX , oY  , (frame * 250) ,  (currentStatus * 250) , 250, HeroLists[heroCode].body.h + HeroLists[heroCode].body.y, 1 * (Direction == DIRECTION_LEFT));
+    render(oX , oY  , (frame * 250) ,  (currentStatus * 250) , 250, HeroData[heroCode].body.h + HeroData[heroCode].body.y, 1 * (Direction == DIRECTION_LEFT));
 }
 
 void Object::render( int a, int b, int x, int y, int iWidth, int iHeight, int checkFlip) {
@@ -268,7 +306,7 @@ void Object::render( int a, int b, int x, int y, int iWidth, int iHeight, int ch
     }
 }
 
-void Object::updateDirection(int a , int b){
+void Object::updateDirection(int a){
     if(Status != MOVEMENT_IDLE) return;
     if(Direction == DIRECTION_LEFT){
         if(oX < a){
@@ -276,7 +314,7 @@ void Object::updateDirection(int a , int b){
         }
     }
     if(Direction == DIRECTION_RIGHT){
-        if(a < oY){
+        if(a < oX){
             Direction = DIRECTION_LEFT;
         }
     }

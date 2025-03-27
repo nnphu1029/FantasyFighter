@@ -11,7 +11,7 @@ void Init(){
         cout << "Warning: Linear texture filtering not enabled!" << endl;
         check = false;
     }
-    window = SDL_CreateWindow("Wind game",
+    window = SDL_CreateWindow("FANTASY FIGHTER",
                               SDL_WINDOWPOS_UNDEFINED,
                               SDL_WINDOWPOS_UNDEFINED,
                               scrWidth,scrHeight,SDL_WINDOW_SHOWN);
@@ -52,10 +52,6 @@ SDL_Texture* loadTexture(string path){
 
 void loadMedia(){
     check = true;
-    if(!openingTheme.loadFromFile("image/OPENINGFF.png")){
-        cout << "Could not load opening theme:" << "image/OPENINGFF.png" << endl;
-        check = false;
-    }
     //  LOADING MAIN TEXTURE
         gTexture = loadTexture("image/Bleachst1.png");
         if(gTexture == NULL){
@@ -69,8 +65,8 @@ void loadMedia(){
             cout << "Could not load image: " << "image/player1_health_bar.png" << endl;
             check =  false;
         }
-        if(!player1.loadFromFile(HeroLists[player1.heroCode].filename)){
-            cout << "Could not load player1:" << HeroLists[player1.heroCode].filename << endl;
+        if(!player1.loadFromFile(HeroData[player1.heroCode].filename)){
+            cout << "Could not load player1:" << HeroData[player1.heroCode].filename << endl;
             check = false;
         }
         if(!P1_Symbol.loadFromFile("image/P1_icon.png")){
@@ -84,8 +80,8 @@ void loadMedia(){
             cout << "Could not load image: " << "image/player2_health_bar.png" << endl;
             check =  false;
         }
-        if(!player2.loadFromFile(HeroLists[player2.heroCode].filename)){
-            cout << "Could not load player2:" << HeroLists[player2.heroCode].filename << endl;
+        if(!player2.loadFromFile(HeroData[player2.heroCode].filename)){
+            cout << "Could not load player2:" << HeroData[player2.heroCode].filename << endl;
             check = false;
         }
         if(!P2_Symbol.loadFromFile("image/P2_icon.png")){
