@@ -18,12 +18,15 @@ class Object{
         SDL_Texture* oTexture;
         int oWidth , oHeight , frame , maxJump;
         bool checkDoubleJump;
-        int multiAttack;
-        bool checkHurt = false;
+        bool checkHurt;
+        bool checkAttack;
+        int beginCastTime , endCastTime;
+        int startCooldown , checkCooldown;
 // UPDATE FUNCTION REQUIRED
         void Gravity();
         void xUpdate();
         void yUpdate();
+        void updateMainBody(int , int);
         void updateHitBox(int , int);
     public:
 // PUBLIC INDEX
@@ -33,27 +36,30 @@ class Object{
         int oX , oY;
         SDL_Rect hitbox;
         SDL_Rect mainBody;
-        int Status , HP , Direction;
-        int beginCastTime , endCastTime;
+        int Status , HP , Direction , limitP1 , limitP2;
 // GET FUNCTION
         Object(int);
         int getWidth();
         int getHeight();
-        int getMultiAttack();
         SDL_Texture* getTexture();
+        int getAttackFrame();
 // STATUS FUNCTION
         void Dash();
         void Jump();
         void Attack();
+        void SpecAttack();
+        void castAttack();
+        void Block();
         void Hurt(int);
         void Stun();
         void Dead();
+        void castMoving(int);
 // UPDATE FUNCTION
-        void updateDirection(int);
+        void updateDirection(int , int);
         void movementUpdate(int , int , int);
 // LOADING FUNCTION
         bool loadFromFile(string);
         void render(int,int,int,int,int,int,int);
-        void deleteObject();
+        void deleteObject(int);
 };
 #endif // OBJECT_H

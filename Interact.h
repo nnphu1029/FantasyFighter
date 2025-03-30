@@ -24,6 +24,8 @@ bool mouseInButton(SDL_Rect);
 
 bool MouseClick(SDL_Rect);
 
+bool checkStateAttack(int);
+
 void interactProcess();
 
 void checkHit();

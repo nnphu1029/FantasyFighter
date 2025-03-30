@@ -20,14 +20,15 @@ extern Object player1;
 extern Object player2;
 extern Object P1_Symbol;
 extern Object P2_Symbol;
-
+extern int currentState;
 
 extern SDL_Event FantasyFighter;
 extern bool quitFantasyFighter;
 extern int orderRender;
 
-extern bool check;
 
+void initPlayer();
+void updateLimit();
 void mainGame();
 void closeMainGame();
 

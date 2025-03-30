@@ -14,6 +14,7 @@ extern int currentState;
 extern Object openingTheme;
 
 bool checkMouse(int , int , SDL_Rect);
+
 void renderOpening();
 void closeOpening();
 

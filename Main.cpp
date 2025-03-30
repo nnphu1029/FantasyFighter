@@ -36,9 +36,11 @@ Object player1(1);
 Object player2(2);
 Object P1_Symbol(0);
 Object P2_Symbol(0);
+//Object P1_SelectHero(0);
+//Object P2_SelectHero(0);
 
 int orderRender = 1;
-int currentState = INTRO;
+int currentState = MAINGAME;
 
 int main(int argc, char* args[]){
     int x = -1, y = -1;

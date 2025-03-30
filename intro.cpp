@@ -73,9 +73,7 @@ void renderIntro(){
     return;
 }
 void closeIntro(){
-    if(introTexture == NULL){
-        SDL_DestroyTexture(introTexture);
-        introTexture = NULL;
-    }
-    startButton.deleteObject();
+    SDL_DestroyTexture(introTexture);
+    introTexture = NULL;
+    startButton.deleteObject(0);
 }

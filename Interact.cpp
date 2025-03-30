@@ -18,19 +18,13 @@ bool mouseInButton(SDL_Rect mouseZone){
 }
 
 void interactProcess(){
-    if(player1.Status == MOVEMENT_ATTACK or player2.Status == MOVEMENT_ATTACK){
-            checkHit();
-        }
-        else{
-            player1.updateDirection(player2.oX);
-            player2.updateDirection(player1.oX);
-        }
-        P1_Symbol.render(player1.oX + HeroData[player1.heroCode].body.x,player1.oY + (HeroData[player1.heroCode].body.y - 26), 0 , 0 ,25,26,0);
-        P2_Symbol.render(player2.oX + HeroData[player2.heroCode].body.x,player2.oY + (HeroData[player2.heroCode].body.y - 26), 0 , 0 ,25,26,0);
-
+        P1_Symbol.render(player1.oX + (HeroData[player1.heroCode].frWidth/2) - 12,player1.oY + 50, 0 , 0 ,25,26,0);
+        P2_Symbol.render(player2.oX + (HeroData[player2.heroCode].frWidth/2) - 12,player2.oY + 50, 0 , 0 ,25,26,0);
+        checkHit();
+        player1.updateDirection(player2.oX + (HeroData[player2.heroCode].frWidth/2) - 12 , player1.oX + (HeroData[player1.heroCode].frWidth/2) - 12);
+        player2.updateDirection(player1.oX + (HeroData[player1.heroCode].frWidth/2) - 12 , player2.oX + (HeroData[player2.heroCode].frWidth/2) - 12);
         renderHPBar(100 - player1.HP , 1);
         renderHPBar(100 - player2.HP , 2);
-
         if(player1.HP <= 0 or player2.HP <= 0){
             if(player1.HP <= 0){
                 player1.Dead();
@@ -40,54 +34,93 @@ void interactProcess(){
             }
         }
 }
+bool checkStateAttack(int type){
+    if(type == 1){
+        return ((player1.Status >= MOVEMENT_ATTACK1 and player1.Status <= MOVEMENT_SPSKILL)
+                or (player1.Status == MOVEMENT_AIRATTACK));
+    }
+    else if(type == 2){
+        return ((player2.Status >= MOVEMENT_ATTACK1 and player2.Status <= MOVEMENT_SPSKILL)
+                or (player2.Status == MOVEMENT_AIRATTACK));
+    }
+}
 void checkHit(){
-    if(player1.Status == player2.Status){
-        if(player1.Status == MOVEMENT_ATTACK){
-            if(SDL_HasIntersection(&player1.hitbox,&player2.hitbox)){
-                player2.Stun();
-                player1.Stun();
-            }
+//    cout << player1.Status << " " << player2.Status << endl;
+    if(checkStateAttack(1) and checkStateAttack(2)){
+        if(SDL_HasIntersection(&player1.hitbox,&player2.hitbox)){
+                player1.veloX -= 60 * player1.Direction;
+                player2.veloX -= 60 * player2.Direction;
+                player1.veloY -= 20;
+                player2.veloY -= 20;
+                return;
         }
     }
     else{
-        int dame;
-        if(player1.Status == MOVEMENT_ATTACK){
-            if(SDL_HasIntersection(&player1.hitbox,&player2.mainBody)){
-                switch (player1.getMultiAttack()){
-                    case 1:
-                        dame = HeroData[player1.heroCode].AttackFrame1.dame;
+        int dame = 0;
+        if(checkStateAttack(2)){
+            if(SDL_HasIntersection(&player2.hitbox,&player1.mainBody)){
+                if(player1.Status == MOVEMENT_BLOCK) return;
+                switch (player2.Status){
+                    case MOVEMENT_ATTACK1:
+                        dame = HeroData[player2.heroCode].AttackFrame1.dame*
+                        (player2.getAttackFrame() + 1 == HeroData[player2.heroCode].AttackFrame1.numberFrame);
                         break;
-                    case 2:
-                        dame = HeroData[player1.heroCode].AttackFrame2.dame;
+                    case MOVEMENT_ATTACK2:
+                        dame = HeroData[player2.heroCode].AttackFrame2.dame*
+                        (player2.getAttackFrame() + 1 == HeroData[player2.heroCode].AttackFrame2.numberFrame);
                         break;
-                    case 3:
-                        dame = HeroData[player1.heroCode].AttackFrame3.dame;
+                    case MOVEMENT_ATTACK3:
+                        dame = HeroData[player2.heroCode].AttackFrame3.dame*
+                        (player2.getAttackFrame() + 1 == HeroData[player2.heroCode].AttackFrame3.numberFrame);
                         break;
-                    default:
+                    case MOVEMENT_AIRATTACK:
+                        dame = HeroData[player2.heroCode].AirAttack.dame*
+                        (player2.getAttackFrame() + 1 == HeroData[player2.heroCode].AirAttack.numberFrame);
+                        break;
+                    case MOVEMENT_SPSKILL:
+                        dame = HeroData[player2.heroCode].SpecSkill.dame*
+                        (player2.getAttackFrame() + 1 == HeroData[player2.heroCode].SpecSkill.numberFrame - 2);
                         break;
                 }
-                player2.Hurt(dame);
-                orderRender = 2;
+                if(dame != 0){
+                    player1.Hurt(dame);
+                    orderRender = 1;
+                }
+                cout << 2 << " " << dame << endl;
             }
         }
-        else if(player2.Status == MOVEMENT_ATTACK){
-            if(SDL_HasIntersection(&player2.hitbox,&player1.mainBody)){
-
-                switch (player2.getMultiAttack()){
-                    case 1:
-                        dame = HeroData[player2.heroCode].AttackFrame1.dame;
-                        break;
-                    case 2:
-                        dame = HeroData[player2.heroCode].AttackFrame2.dame;
-                        break;
-                    case 3:
-                        dame = HeroData[player2.heroCode].AttackFrame3.dame;
-                        break;
-                    default:
-                        break;
+        else{
+            if(checkStateAttack(1)){
+                if(SDL_HasIntersection(&player1.hitbox,&player2.mainBody)){
+                    if(player2.Status == MOVEMENT_BLOCK) return;
+                    switch (player1.Status){
+                        case MOVEMENT_ATTACK1:
+                            dame = HeroData[player1.heroCode].AttackFrame1.dame*
+                            (player1.getAttackFrame() + 1 == HeroData[player1.heroCode].AttackFrame1.numberFrame);
+                            break;
+                        case MOVEMENT_ATTACK2:
+                            dame = HeroData[player1.heroCode].AttackFrame2.dame*
+                            (player1.getAttackFrame() + 1 == HeroData[player1.heroCode].AttackFrame2.numberFrame);
+                            break;
+                        case MOVEMENT_ATTACK3:
+                            dame = HeroData[player1.heroCode].AttackFrame3.dame*
+                            (player1.getAttackFrame() + 1 == HeroData[player1.heroCode].AttackFrame3.numberFrame);
+                            break;
+                        case MOVEMENT_AIRATTACK:
+                            dame = HeroData[player1.heroCode].AirAttack.dame*
+                            (player1.getAttackFrame() + 1 == HeroData[player1.heroCode].AirAttack.numberFrame);
+                            break;
+                        case MOVEMENT_SPSKILL:
+                            dame = HeroData[player1.heroCode].SpecSkill.dame*
+                            (player1.getAttackFrame() + 1 == HeroData[player1.heroCode].SpecSkill.numberFrame - 2);
+                            break;
+                    }
+                    if(dame != 0){
+                        player2.Hurt(dame);
+                        orderRender = 2;
+                    }
+                    cout << 1 << " " << dame << endl;
                 }
-                player1.Hurt(dame);
-                orderRender = 1;
             }
         }
     }

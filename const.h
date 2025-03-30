@@ -17,35 +17,13 @@ const int OPENINGFRAME = 40;
 // PHYSIC CONSTANT
 const float gravityAccel = 3.5f;
 const int ATTACKTIME = 400;
+const int SPECCOOLDOWN = 500;
 
 // INTIAL DATA
-const int PLAYER1X = 0;
+const int PLAYER1X = -200;
 const int PLAYERY = scrHeight - 200;
-const int PLAYER2X = scrWidth - 250;
-const int FRAMERESET = -1;
-const int FRAME_SIZE = 250;
-
-// HERO STATUS
-const int MOVEMENT_IDLE = 0;
-const int MOVEMENT_MOVE = 1;
-const int MOVEMENT_ATTACK = 2;
-const int MOVEMENT_JUMP = 3;
-const int MOVEMENT_FALL = 4;
-const int MOVEMENT_HURT = 5;
-const int MOVEMENT_DEATH = 6;
-
-
-// HERO DIRECTION
-const int DIRECTION_RIGHT = 1;
-const int DIRECTION_LEFT = -1;
-
-//// HERO LISTS
-//enum Hero{
-//    FantasyWarrior,
-//    SamuraiMartialHero2,
-//    SamuraiMartialHero,
-//    TOTAL_HEROS
-//};
+const int PLAYER2X = scrWidth - 300;
+const int FRAMERESET = 0;
 
 enum GameState{
     INTRO,
@@ -56,28 +34,6 @@ enum GameState{
     TOTAL_STATE
 };
 
-//struct skill{
-//    SDL_Rect hitAOE;
-//    int numberFrame;
-//    int dame;
-//};
-//
-//struct HeroSpec{
-//    string filename;
-//    int TotalFrame;
-//    int AttackFrame1;
-//    int AttackFrame2;
-//    int AttackFrame3;
-//    SDL_Rect hitAOE;
-//    int HurtFrame;
-//    int DeadFrame;
-//    SDL_Rect body;
-//};
-//
-//const HeroSpec HeroLists[TOTAL_HEROS - 1] = {
-//    {"image/FantasyWarrior.png" , 18 , 6 , 6 , 10 , {90 , 60 , 120 , 110}  , 3 , 7 , {115 , 85 , 30 , 70}},
-//    {"image/SamuraiMartialHero.png", 12 , 6 , 6 ,  0 , {100 , 65 , 133 , 87},  4 , 6, {115 , 86 , 20 , 70}}
-//};
 
 
 #endif

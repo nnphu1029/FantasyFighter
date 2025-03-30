@@ -43,6 +43,6 @@ void renderOpening(){
     return;
 }
 void closeOpening(){
-    openingTheme.deleteObject();
+    openingTheme.deleteObject(0);
 }
 

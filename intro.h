@@ -7,7 +7,6 @@
 #include "init.h"
 using namespace std;
 
-extern bool check;
 extern SDL_Event FantasyFighter;
 extern bool quitFantasyFighter;
 extern int currentState;
