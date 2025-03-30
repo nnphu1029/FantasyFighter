@@ -16,6 +16,8 @@ extern SDL_Texture* gTexture;
 extern SDL_Texture* introTexture;
 extern SDL_Texture* P1_HpBar;
 extern SDL_Texture* P2_HpBar;
+extern SDL_Texture* P1_SelectHero;
+extern SDL_Texture* P2_SelectHero;
 extern Object player1;
 extern Object player2;
 extern Object P1_Symbol;

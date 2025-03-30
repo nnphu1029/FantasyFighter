@@ -2,7 +2,7 @@
 
 void initPlayer(){
 //  LOADING BACKGROUND
-    gTexture = loadTexture("image/Bleachst1.png");
+    gTexture = loadTexture("image/arena_1.png");
     if(gTexture == NULL){
         cout << "Texture Failed" << endl;
         return;
@@ -39,6 +39,14 @@ void initPlayer(){
 }
 
 void mainGame(){
+//    int x = -1, y = -1;
+//    cout << "Select Hero 1: ";
+//    cin >> x;
+//    player1.heroCode = x;
+//    cout << "Select Hero 2: ";
+//    cin >> y;
+//    player2.heroCode = y;
+
     initPlayer();
     updateLimit();
 
@@ -104,6 +112,7 @@ void mainGame(){
         player1.objectFlag = SDL_GetKeyboardState(NULL);
         player2.objectFlag = SDL_GetKeyboardState(NULL);
 //        cout << player1.Status << " " << player2.Status << endl;
+
         if(orderRender == 1){
             player1.movementUpdate(HeroData[player1.heroCode].frWidth , HeroData[player1.heroCode].frHeight , 1);
             player2.movementUpdate(HeroData[player2.heroCode].frWidth , HeroData[player2.heroCode].frHeight , 2);

@@ -45,7 +45,6 @@ bool checkStateAttack(int type){
     }
 }
 void checkHit(){
-//    cout << player1.Status << " " << player2.Status << endl;
     if(checkStateAttack(1) and checkStateAttack(2)){
         if(SDL_HasIntersection(&player1.hitbox,&player2.hitbox)){
                 player1.veloX -= 60 * player1.Direction;
@@ -86,7 +85,7 @@ void checkHit(){
                     player1.Hurt(dame);
                     orderRender = 1;
                 }
-                cout << 2 << " " << dame << endl;
+//                cout << 2 << " " << dame << endl;
             }
         }
         else{
@@ -119,7 +118,7 @@ void checkHit(){
                         player2.Hurt(dame);
                         orderRender = 2;
                     }
-                    cout << 1 << " " << dame << endl;
+//                    cout << 1 << " " << dame << endl;
                 }
             }
         }

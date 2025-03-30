@@ -8,7 +8,7 @@ Object::Object(int type){
     if(type != 0){
         HP = 100;
         oX = PLAYER1X * (type == 1) +  PLAYER2X * (type == 2);
-        oY = PLAYERY;
+        oY = 0;
         veloX = 0 , veloY = 0;
         Status = MOVEMENT_IDLE;
 

@@ -49,48 +49,6 @@ SDL_Texture* loadTexture(string path){
     return newTexture;
 }
 
-
-void loadMedia(){
-//    check = true;
-//    //  LOADING MAIN TEXTURE
-//        gTexture = loadTexture("image/Bleachst1.png");
-//        if(gTexture == NULL){
-//            cout << "Texture Failed" << endl;
-//            check =  false;
-//        }
-
-//    // LOADING PLAYER1
-//        P1_HpBar = loadTexture("image/player1_health_bar.png");
-//        if(P1_HpBar == NULL){
-//            cout << "Could not load image: " << "image/player1_health_bar.png" << endl;
-//            check =  false;
-//        }
-//        if(!player1.loadFromFile(HeroData[player1.heroCode].filename)){
-//            cout << "Could not load player1:" << HeroData[player1.heroCode].filename << endl;
-//            check = false;
-//        }
-//        if(!P1_Symbol.loadFromFile("image/P1_icon.png")){
-//            cout << "Could not load image: " << "image/P1_icon.png" << endl;
-//            check = false;
-//        }
-//
-//    //  LOADING PLAYER2
-//        P2_HpBar = loadTexture("image/player2_health_bar.png");
-//        if(P2_HpBar == NULL){
-//            cout << "Could not load image: " << "image/player2_health_bar.png" << endl;
-//            check =  false;
-//        }
-//        if(!player2.loadFromFile(HeroData[player2.heroCode].filename)){
-//            cout << "Could not load player2:" << HeroData[player2.heroCode].filename << endl;
-//            check = false;
-//        }
-//        if(!P2_Symbol.loadFromFile("image/P2_icon.png")){
-//            cout << "Could not load image: " << "image/P2_icon.png" << endl;
-//            check = false;
-//        }
-    return ;
-}
-
 void EndGame(){
     SDL_DestroyTexture(gTexture);
     gTexture = NULL;
@@ -98,6 +56,13 @@ void EndGame(){
     P1_HpBar = NULL;
     SDL_DestroyTexture(P2_HpBar);
     P2_HpBar = NULL;
+
+    SDL_DestroyTexture(P1_SelectHero);
+    P1_SelectHero = NULL;
+
+    SDL_DestroyTexture(P2_SelectHero);
+    P2_SelectHero = NULL;
+
     player1.deleteObject(1);
     player2.deleteObject(2);
 

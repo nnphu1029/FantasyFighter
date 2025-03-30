@@ -36,7 +36,7 @@ void renderIntro(){
                         quitFantasyFighter = true;
                         break;
                     case SDLK_RETURN:
-                        currentState = OPENING;
+                        currentState = MENU;
                         break;
                 }
             }
@@ -49,7 +49,7 @@ void renderIntro(){
             if(mouseInButton(START)){
                 buttonFrame = 19;
                 if(MouseClick(START)){
-                    currentState = OPENING;
+                    currentState = MENU;
                     continue;
                 }
             }

@@ -9,6 +9,7 @@
 
 #include "intro.h"
 #include "opening.h"
+#include "menu.h"
 #include "game.h"
 
 #define fi first
@@ -24,11 +25,12 @@ SDL_Texture* introTexture = NULL;
 //HP BAR AND SYMBOL
 SDL_Texture* P1_HpBar = NULL;
 SDL_Texture* P2_HpBar = NULL;
+SDL_Texture* P1_SelectHero = NULL;
+SDL_Texture* P2_SelectHero = NULL;
 
 SDL_Event FantasyFighter;
 
 bool quitFantasyFighter = false;
-bool quitMenu = false;
 
 Object openingTheme(0);
 Object startButton(0);
@@ -36,29 +38,15 @@ Object player1(1);
 Object player2(2);
 Object P1_Symbol(0);
 Object P2_Symbol(0);
-//Object P1_SelectHero(0);
-//Object P2_SelectHero(0);
+
 
 int orderRender = 1;
-int currentState = MAINGAME;
+int currentState = INTRO;
 
 int main(int argc, char* args[]){
-    int x = -1, y = -1;
-    cout << "Select Hero 1: ";
-    cin >> x;
-    player1.heroCode = x;
-    cout << "Select Hero 2: ";
-    cin >> y;
-    player2.heroCode = y;
     Init();
     if(check == false){
         cout << "INIT Failed" << endl;
-        return 0;
-    }
-
-    loadMedia();
-    if(check == false){
-        cout<< "LoadMedia failed" << endl;
         return 0;
     }
     while(!quitFantasyFighter){
@@ -67,11 +55,13 @@ int main(int argc, char* args[]){
                 quitFantasyFighter = true;
             }
         }
+        cout << currentState << endl;
         switch(currentState){
             case INTRO:
                 renderIntro();
                 break;
             case MENU:
+                RenderMenu();
                 break;
             case OPENING:
                 renderOpening();
