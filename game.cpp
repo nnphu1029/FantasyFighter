@@ -38,14 +38,6 @@ void initPlayer(){
 }
 
 void mainGame(){
-//    int x = -1, y = -1;
-//    cout << "Select Hero 1: ";
-//    cin >> x;
-//    player1.heroCode = x;
-//    cout << "Select Hero 2: ";
-//    cin >> y;
-//    player2.heroCode = y;
-
     initPlayer();
     updateLimit();
     int currentFrameTime, frameTime;
@@ -85,6 +77,7 @@ void mainGame(){
                             }
                             break;
                     }
+                    break;
                 }
                 else{
                     switch (FantasyFighter.key.keysym.sym){
@@ -121,7 +114,6 @@ void mainGame(){
                             break;
 
                         case SDLK_ESCAPE:
-                            quitGame = true;
                             CheckPause = true;
                             break;
                         case SDLK_t:
@@ -133,29 +125,30 @@ void mainGame(){
                 }
             }
         //UPDATE CHARACTER
-        if(CheckPause == true){
-            player1.ZA_WARUDO();
-            player2.ZA_WARUDO();
-            renderPause();
-        }
-        else{
             player1.objectFlag = SDL_GetKeyboardState(NULL);
             player2.objectFlag = SDL_GetKeyboardState(NULL);
     //        cout << player1.Status << " " << player2.Status << endl;
-            if(orderRender == 1){
-                player1.movementUpdate(HeroData[player1.heroCode].frWidth , HeroData[player1.heroCode].frHeight , 1);
-                player2.movementUpdate(HeroData[player2.heroCode].frWidth , HeroData[player2.heroCode].frHeight , 2);
+
+            if(CheckPause == true){
+                player1.ZA_WARUDO();
+                player2.ZA_WARUDO();
+                interactProcess();
+                renderPause();
             }
             else{
-                player2.movementUpdate(HeroData[player2.heroCode].frWidth , HeroData[player2.heroCode].frHeight , 2);
-                player1.movementUpdate(HeroData[player1.heroCode].frWidth , HeroData[player1.heroCode].frHeight , 1);
+                if(orderRender == 1){
+                    player1.movementUpdate(HeroData[player1.heroCode].frWidth , HeroData[player1.heroCode].frHeight , 1);
+                    player2.movementUpdate(HeroData[player2.heroCode].frWidth , HeroData[player2.heroCode].frHeight , 2);
+                }
+                else{
+                    player2.movementUpdate(HeroData[player2.heroCode].frWidth , HeroData[player2.heroCode].frHeight , 2);
+                    player1.movementUpdate(HeroData[player1.heroCode].frWidth , HeroData[player1.heroCode].frHeight , 1);
+                }
+                interactProcess();
             }
-
-            interactProcess();
-        }
-    // PRESENT RENDERER
+// PRESENT RENDERER
         SDL_RenderPresent(gRenderer);
-    // MANAGE FPS
+// MANAGE FPS
         frameTime = SDL_GetTicks() - currentFrameTime;
         if (frameTime < TARGET_FRAME_TIME) {
             SDL_Delay(TARGET_FRAME_TIME - frameTime);

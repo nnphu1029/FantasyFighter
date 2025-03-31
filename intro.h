@@ -6,6 +6,7 @@
 #include "Interact.h"
 #include "init.h"
 #include "Opening.h"
+#include "pause.h"
 using namespace std;
 
 extern SDL_Event FantasyFighter;
@@ -15,6 +16,9 @@ extern int currentState;
 extern Object startButton;
 
 extern SDL_Texture* introTexture;
+
+extern bool CheckPause;
+extern int PauseMenuState;
 
 void initIntro();
 

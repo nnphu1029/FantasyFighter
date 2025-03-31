@@ -12,6 +12,7 @@
 #include "Opening.h"
 #include "pause.h"
 
+
 extern SDL_Renderer* gRenderer;
 extern SDL_Texture* gTexture;
 
@@ -26,8 +27,9 @@ extern int currentState;
 
 extern SDL_Event FantasyFighter;
 extern bool quitFantasyFighter;
-extern bool CheckPause;
 extern int orderRender;
+
+extern bool CheckPause;
 extern int PauseMenuState;
 
 void initPlayer();

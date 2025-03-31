@@ -43,6 +43,7 @@ bool checkStateAttack(int type){
         return ((player2.Status >= MOVEMENT_ATTACK1 and player2.Status <= MOVEMENT_SPSKILL)
                 or (player2.Status == MOVEMENT_AIRATTACK));
     }
+    return false;
 }
 void checkHit(){
     if(checkStateAttack(1) and checkStateAttack(2)){

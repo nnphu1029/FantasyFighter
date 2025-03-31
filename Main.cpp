@@ -11,8 +11,6 @@
 #include "opening.h"
 #include "menu.h"
 #include "game.h"
-#include "pause.h"
-
 using namespace std;
 bool check = false;
 

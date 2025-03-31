@@ -30,37 +30,72 @@ void renderIntro(){
                 continue;
             }
             if(FantasyFighter.type == SDL_KEYDOWN){
-                switch (FantasyFighter.key.keysym.sym){
-                    case SDLK_ESCAPE:
-                        quitIntro = true;
-                        quitFantasyFighter = true;
-                        break;
-                    case SDLK_RETURN:
-                        currentState = MENU;
-                        break;
+                 if(CheckPause == true){
+                    switch (FantasyFighter.key.keysym.sym){
+                        case(SDLK_UP):
+                            PauseMenuState = max(PauseMenuState - 1,0);
+                            break;
+                        case(SDLK_DOWN):
+                            PauseMenuState = min(PauseMenuState + 1,2);
+                            break;
+                        case (SDLK_RETURN):
+                            switch (PauseMenuState){
+                                case 0:
+                                    CheckPause = false;
+                                    break;
+                                case 1:
+                                    currentState = MENU;
+                                    quitIntro = true;
+                                    CheckPause = false;
+                                    break;
+                                case 2:
+                                    quitIntro = true;
+                                    quitFantasyFighter = true;
+                                    break;
+                            }
+                            break;
+                    }
+                    break;
+                }
+                else{
+                    switch (FantasyFighter.key.keysym.sym){
+                        case SDLK_ESCAPE:
+                            CheckPause = true;
+                            break;
+                        case SDLK_RETURN:
+                            currentState = MENU;
+                            break;
+                    }
                 }
             }
         }
-        if(buttonFrame == 20 and currentState != INTRO){
-            quitIntro = true;
-            continue;
-        }
-        if(currentState == INTRO){
-            if(mouseInButton(START)){
-                buttonFrame = 19;
-                if(MouseClick(START)){
-                    currentState = MENU;
-                    continue;
-                }
-            }
-            else buttonFrame = (buttonFrame + 1)%18;
+        if(CheckPause == true){
+            SDL_RenderCopy(gRenderer,introTexture,NULL,NULL);
+            startButton.render(450,450,0,buttonFrame*80 ,300, 80,0);
+            renderPause();
         }
         else{
-            buttonFrame ++;
-        }
+            if(buttonFrame == 20 and currentState != INTRO){
+                quitIntro = true;
+                continue;
+            }
+            if(currentState == INTRO){
+                if(mouseInButton(START)){
+                    buttonFrame = 19;
+                    if(MouseClick(START)){
+                        currentState = MENU;
+                        continue;
+                    }
+                }
+                else buttonFrame = (buttonFrame + 1)%18;
+            }
+            else{
+                buttonFrame ++;
+            }
 
-        SDL_RenderCopy(gRenderer,introTexture,NULL,NULL);
-        startButton.render(450,450,0,buttonFrame*80 ,300, 80,0);
+            SDL_RenderCopy(gRenderer,introTexture,NULL,NULL);
+            startButton.render(450,450,0,buttonFrame*80 ,300, 80,0);
+        }
 
         SDL_RenderPresent(gRenderer);
 

@@ -25,25 +25,27 @@ void renderPause(){
     }
     SDL_RenderCopy(gRenderer,PauseTexture,NULL,NULL);
     if(PauseMenuState == 0){
-        ResumeButtonFrame = min(ResumeButtonFrame + 2,BUTTONFRAME - 1);
+        ResumeButtonFrame = min(ResumeButtonFrame + 3,BUTTONFRAME - 1);
     }
     else{
         ResumeButtonFrame = FRAMERESET;
     }
     if(PauseMenuState == 1){
-        MenuButtonFrame = min(MenuButtonFrame + 2,BUTTONFRAME - 1);
+        MenuButtonFrame = min(MenuButtonFrame + 3,BUTTONFRAME - 1);
     }
     else{
         MenuButtonFrame = FRAMERESET;
     }
     if(PauseMenuState == 2){
-        QuitGameButtonFrame = min(QuitGameButtonFrame + 2,BUTTONFRAME - 1);
+        QuitGameButtonFrame = min(QuitGameButtonFrame + 3,BUTTONFRAME - 1);
     }
     else{
         QuitGameButtonFrame = FRAMERESET;
     }
     ResumeButton.render(PauseButton[0].x,PauseButton[0].y,0,ResumeButtonFrame*60,250,60,0);
+
     MenuButton.render(PauseButton[1].x,PauseButton[1].y,0,MenuButtonFrame*60,250,60,0);
+
     QuitGameButton.render(PauseButton[2].x,PauseButton[2].y,0,QuitGameButtonFrame*60,250,60,0);
     if(CheckPause == false){
         closePause();
