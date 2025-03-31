@@ -13,6 +13,7 @@ const int scrHeight = 600;
 const int TARGET_FPS = 20;
 const float TARGET_FRAME_TIME = 1000.0f / TARGET_FPS;
 const int OPENINGFRAME = 40;
+const int BUTTONFRAME = 20;
 
 // PHYSIC CONSTANT
 const float gravityAccel = 3.5f;
@@ -28,9 +29,9 @@ const int FRAMERESET = 0;
 enum GameState{
     INTRO,
     MENU,
-    OPENING,
     MAINGAME,
     EXIT,
+    OPENING,
     TOTAL_STATE
 };
 

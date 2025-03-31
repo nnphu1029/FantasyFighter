@@ -327,6 +327,11 @@ void Object::render( int a, int b, int x, int y, int iWidth, int iHeight, int ch
     }
 }
 
+void Object::ZA_WARUDO(){
+    render(oX , oY  , frame * HeroData[heroCode].frWidth ,  Status * HeroData[heroCode].frHeight ,
+           HeroData[heroCode].frWidth , HeroData[heroCode].frHeight, 1 * (Direction == DIRECTION_LEFT));
+}
+
 void Object::updateDirection(int a , int b){
     if(Status != MOVEMENT_IDLE) return;
     if(Direction == DIRECTION_LEFT){

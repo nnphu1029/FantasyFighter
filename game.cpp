@@ -1,5 +1,4 @@
 #include "game.h"
-
 void initPlayer(){
 //  LOADING BACKGROUND
     gTexture = loadTexture("image/arena_1.png");
@@ -49,7 +48,6 @@ void mainGame(){
 
     initPlayer();
     updateLimit();
-
     int currentFrameTime, frameTime;
     bool quitGame = false;
     while(!quitGame){
@@ -62,68 +60,99 @@ void mainGame(){
                 continue;
             }
             if(FantasyFighter.type == SDL_KEYDOWN){
-                switch (FantasyFighter.key.keysym.sym){
-                    case(SDLK_j):
-                        player1.Attack();
-                        break;
-                    case(SDLK_w):
-                        player1.Jump();
-                        break;
-                    case(SDLK_l):
-                        player1.Dash();
-                        break;
-                    case(SDLK_s):
-                        player1.Block();
-                        break;
-                    case(SDLK_u):
-                        player1.SpecAttack();
-                        break;
+                if(CheckPause == true){
+                    switch (FantasyFighter.key.keysym.sym){
+                        case(SDLK_UP):
+                            PauseMenuState = max(PauseMenuState - 1,0);
+                            break;
+                        case(SDLK_DOWN):
+                            PauseMenuState = min(PauseMenuState + 1,2);
+                            break;
+                        case (SDLK_RETURN):
+                            switch (PauseMenuState){
+                                case 0:
+                                    CheckPause = false;
+                                    break;
+                                case 1:
+                                    currentState = MENU;
+                                    quitGame = true;
+                                    CheckPause = false;
+                                    break;
+                                case 2:
+                                    quitGame = true;
+                                    quitFantasyFighter = true;
+                                    break;
+                            }
+                            break;
+                    }
+                }
+                else{
+                    switch (FantasyFighter.key.keysym.sym){
+                        case(SDLK_j):
+                            player1.Attack();
+                            break;
+                        case(SDLK_w):
+                            player1.Jump();
+                            break;
+                        case(SDLK_l):
+                            player1.Dash();
+                            break;
+                        case(SDLK_s):
+                            player1.Block();
+                            break;
+                        case(SDLK_u):
+                            player1.SpecAttack();
+                            break;
 
-                    case(SDLK_KP_4):
-                        player2.Attack();
-                        break;
-                    case(SDLK_UP):
-                        player2.Jump();
-                        break;
-                    case(SDLK_KP_6):
-                        player2.Dash();
-                        break;
-                    case(SDLK_DOWN):
-                        player2.Block();
-                        break;
-                    case (SDLK_KP_7):
-                        player2.SpecAttack();
-                        break;
+                        case(SDLK_KP_4):
+                            player2.Attack();
+                            break;
+                        case(SDLK_UP):
+                            player2.Jump();
+                            break;
+                        case(SDLK_KP_6):
+                            player2.Dash();
+                            break;
+                        case(SDLK_DOWN):
+                            player2.Block();
+                            break;
+                        case (SDLK_KP_7):
+                            player2.SpecAttack();
+                            break;
 
-                    case SDLK_ESCAPE:
-                        quitGame = true;
-                        quitFantasyFighter = true;
-                        break;
-                    case SDLK_t:
-                        player1.HP = 0;
-                        player2.HP = 0;
-//                        quitGame = true;
-//                        currentState = INTRO;
-                        break;
+                        case SDLK_ESCAPE:
+                            quitGame = true;
+                            CheckPause = true;
+                            break;
+                        case SDLK_t:
+                            player1.HP = 0;
+                            player2.HP = 0;
+                            break;
+                        }
+                    }
                 }
             }
-        }
         //UPDATE CHARACTER
-        player1.objectFlag = SDL_GetKeyboardState(NULL);
-        player2.objectFlag = SDL_GetKeyboardState(NULL);
-//        cout << player1.Status << " " << player2.Status << endl;
-
-        if(orderRender == 1){
-            player1.movementUpdate(HeroData[player1.heroCode].frWidth , HeroData[player1.heroCode].frHeight , 1);
-            player2.movementUpdate(HeroData[player2.heroCode].frWidth , HeroData[player2.heroCode].frHeight , 2);
+        if(CheckPause == true){
+            player1.ZA_WARUDO();
+            player2.ZA_WARUDO();
+            renderPause();
         }
         else{
-            player2.movementUpdate(HeroData[player2.heroCode].frWidth , HeroData[player2.heroCode].frHeight , 2);
-            player1.movementUpdate(HeroData[player1.heroCode].frWidth , HeroData[player1.heroCode].frHeight , 1);
+            player1.objectFlag = SDL_GetKeyboardState(NULL);
+            player2.objectFlag = SDL_GetKeyboardState(NULL);
+    //        cout << player1.Status << " " << player2.Status << endl;
+            if(orderRender == 1){
+                player1.movementUpdate(HeroData[player1.heroCode].frWidth , HeroData[player1.heroCode].frHeight , 1);
+                player2.movementUpdate(HeroData[player2.heroCode].frWidth , HeroData[player2.heroCode].frHeight , 2);
+            }
+            else{
+                player2.movementUpdate(HeroData[player2.heroCode].frWidth , HeroData[player2.heroCode].frHeight , 2);
+                player1.movementUpdate(HeroData[player1.heroCode].frWidth , HeroData[player1.heroCode].frHeight , 1);
+            }
+
+            interactProcess();
         }
-
-        interactProcess();
-
     // PRESENT RENDERER
         SDL_RenderPresent(gRenderer);
     // MANAGE FPS

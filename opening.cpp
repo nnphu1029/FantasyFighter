@@ -28,7 +28,6 @@ void renderOpening(){
         }
         if(Oframe == OPENINGFRAME){
             quitOpening = true;
-            currentState = MAINGAME;
             continue;
         }
         Oframe += 1;

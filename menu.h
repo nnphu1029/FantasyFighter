@@ -5,6 +5,7 @@
 #include<SDL.h>
 #include "Object.h"
 #include "init.h"
+#include "Opening.h"
 using namespace std;
 
 

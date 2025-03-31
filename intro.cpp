@@ -1,6 +1,6 @@
 #include "intro.h"
 
-void loadIntroResource(){
+void initIntro(){
     introTexture = loadTexture("image/intro.png");
     if(introTexture == NULL){
         cout << "Loading Intro FAILED: " << "image/intro.png";
@@ -14,7 +14,7 @@ void loadIntroResource(){
 
 
 void renderIntro(){
-    loadIntroResource();
+    initIntro();
 
     int buttonFrame = FRAMERESET;
     bool quitIntro = false;
@@ -70,6 +70,7 @@ void renderIntro(){
         }
     }
     closeIntro();
+    renderOpening();
     return;
 }
 void closeIntro(){

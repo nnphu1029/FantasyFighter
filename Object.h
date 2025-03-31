@@ -6,7 +6,6 @@
 #include<iostream>
 #include<SDL_image.h>
 #include "const.h"
-#include "Object.h"
 #include "data.h"
 using namespace std;
 
@@ -57,6 +56,7 @@ class Object{
 // UPDATE FUNCTION
         void updateDirection(int , int);
         void movementUpdate(int , int , int);
+        void ZA_WARUDO();
 // LOADING FUNCTION
         bool loadFromFile(string);
         void render(int,int,int,int,int,int,int);

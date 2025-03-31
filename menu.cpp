@@ -79,7 +79,7 @@ void RenderMenu(){
         }
         if(checkPlayer1Select == true and checkPlayer2Select == true){
             quitMenu = true;
-            currentState = OPENING;
+            currentState = MAINGAME;
             continue;
         }
         if(checkPlayer1Select == false){
@@ -105,6 +105,7 @@ void RenderMenu(){
         }
     }
     closeMenu();
+    renderOpening();
     return;
 }
 

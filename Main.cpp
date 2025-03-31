@@ -11,9 +11,7 @@
 #include "opening.h"
 #include "menu.h"
 #include "game.h"
-
-#define fi first
-#define se second
+#include "pause.h"
 
 using namespace std;
 bool check = false;
@@ -22,6 +20,7 @@ SDL_Window* window = NULL;
 SDL_Renderer* gRenderer = NULL;
 SDL_Texture* gTexture = NULL;
 SDL_Texture* introTexture = NULL;
+SDL_Texture* PauseTexture = NULL;
 //HP BAR AND SYMBOL
 SDL_Texture* P1_HpBar = NULL;
 SDL_Texture* P2_HpBar = NULL;
@@ -39,9 +38,18 @@ Object player2(2);
 Object P1_Symbol(0);
 Object P2_Symbol(0);
 
+Object QuitGameButton(0);
+Object ResumeButton(0);
+Object MenuButton(0);
 
 int orderRender = 1;
 int currentState = INTRO;
+int PauseMenuState = 0;
+int QuitGameButtonFrame = FRAMERESET;
+int ResumeButtonFrame = FRAMERESET;
+int MenuButtonFrame = FRAMERESET;
+bool CheckPause = false;
+
 
 int main(int argc, char* args[]){
     Init();
@@ -62,9 +70,6 @@ int main(int argc, char* args[]){
                 break;
             case MENU:
                 RenderMenu();
-                break;
-            case OPENING:
-                renderOpening();
                 break;
             case MAINGAME:
                 mainGame();
