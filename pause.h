@@ -11,6 +11,7 @@ extern bool quitFantasyFighter;
 extern int currentState;
 extern SDL_Renderer* gRenderer;
 extern SDL_Texture* PauseTexture;
+extern int currentState;
 
 extern Object QuitGameButton;
 extern Object MenuButton;

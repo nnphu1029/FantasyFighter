@@ -19,8 +19,9 @@ class Object{
         bool checkDoubleJump;
         bool checkHurt;
         bool checkAttack;
+        bool checkAirBorne;
         int beginCastTime , endCastTime;
-        int startCooldown , checkCooldown;
+        int startCooldown , checkCooldown ;
 // UPDATE FUNCTION REQUIRED
         void Gravity();
         void xUpdate();
@@ -35,13 +36,15 @@ class Object{
         int oX , oY;
         SDL_Rect hitbox;
         SDL_Rect mainBody;
-        int Status , HP , Direction , limitP1 , limitP2;
+        int Status , HP , Direction , limitLeft , limitRight;
 // GET FUNCTION
         Object(int);
         int getWidth();
         int getHeight();
         SDL_Texture* getTexture();
         int getAttackFrame();
+        int updateMaxJump(int);
+        void setInitLocate(int);
 // STATUS FUNCTION
         void Dash();
         void Jump();
@@ -50,7 +53,7 @@ class Object{
         void castAttack();
         void Block();
         void Hurt(int);
-        void Stun();
+        void AirBorne();
         void Dead();
         void castMoving(int);
 // UPDATE FUNCTION

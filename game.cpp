@@ -1,12 +1,20 @@
 #include "game.h"
-void initPlayer(){
-//  LOADING BACKGROUND
-    gTexture = loadTexture("image/arena_1.png");
-    if(gTexture == NULL){
-        cout << "Texture Failed" << endl;
+
+SDL_Texture* background_Texture = NULL;
+SDL_Texture* presentTexture = NULL;
+Object player1(1);
+Object player2(2);
+int orderRender = 1;
+
+void loadingPlayer(){
+// SET UP ZOOM TEXTURE
+    presentTexture = SDL_CreateTexture(gRenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, scrWidth, scrHeight);
+// LOADING PLAYER1
+    P1_ava = loadTexture(HeroData[player1.heroCode].avatar);
+    if(P1_ava == NULL){
+        cout << "Could not load image: " << HeroData[player1.heroCode].avatar << endl;
         return;
     }
-// LOADING PLAYER1
     P1_HpBar = loadTexture("image/player1_health_bar.png");
     if(P1_HpBar == NULL){
         cout << "Could not load image: " << "image/player1_health_bar.png" << endl;
@@ -22,6 +30,11 @@ void initPlayer(){
     }
 
 //  LOADING PLAYER2
+    P2_ava = loadTexture(HeroData[player2.heroCode].avatar);
+    if(P2_ava == NULL){
+        cout << "Could not load image: " << HeroData[player2.heroCode].avatar << endl;
+        return;
+    }
     P2_HpBar = loadTexture("image/player2_health_bar.png");
     if(P2_HpBar == NULL){
         cout << "Could not load image: " << "image/player2_health_bar.png" << endl;
@@ -35,16 +48,22 @@ void initPlayer(){
         cout << "Could not load image: " << "image/P2_icon.png" << endl;
         return;
     }
+    player1.setInitLocate(1);
+    player2.setInitLocate(2);
 }
 
 void mainGame(){
-    initPlayer();
-    updateLimit();
-    int currentFrameTime, frameTime;
+    SDL_RenderClear(gRenderer);
+
+    loadingPlayer();
+
     bool quitGame = false;
     while(!quitGame){
         currentFrameTime = SDL_GetTicks();
-        SDL_RenderCopy(gRenderer,gTexture,NULL,NULL);
+        SDL_SetRenderTarget(gRenderer,presentTexture);
+        SDL_RenderClear(gRenderer);
+        cout << player1.Status << " " << player2.Status << endl;
+        SDL_RenderCopy(gRenderer,background_Texture,NULL,NULL);
         while(SDL_PollEvent(&FantasyFighter) != 0){
             if(FantasyFighter.type == SDL_QUIT){
                 quitGame = true;
@@ -81,6 +100,9 @@ void mainGame(){
                 }
                 else{
                     switch (FantasyFighter.key.keysym.sym){
+                        case SDLK_ESCAPE:
+                            CheckPause = true;
+                            break;
                         case(SDLK_j):
                             player1.Attack();
                             break;
@@ -112,10 +134,6 @@ void mainGame(){
                         case (SDLK_KP_7):
                             player2.SpecAttack();
                             break;
-
-                        case SDLK_ESCAPE:
-                            CheckPause = true;
-                            break;
                         case SDLK_t:
                             player1.HP = 0;
                             player2.HP = 0;
@@ -124,28 +142,32 @@ void mainGame(){
                     }
                 }
             }
-        //UPDATE CHARACTER
-            player1.objectFlag = SDL_GetKeyboardState(NULL);
-            player2.objectFlag = SDL_GetKeyboardState(NULL);
-    //        cout << player1.Status << " " << player2.Status << endl;
 
-            if(CheckPause == true){
-                player1.ZA_WARUDO();
-                player2.ZA_WARUDO();
-                interactProcess();
-                renderPause();
+        player1.objectFlag = SDL_GetKeyboardState(NULL);
+        player2.objectFlag = SDL_GetKeyboardState(NULL);
+
+
+        if(CheckPause == true){
+            player1.ZA_WARUDO();
+            player2.ZA_WARUDO();
+        }
+        else{
+            if(orderRender == 1){
+                player1.movementUpdate(HeroData[player1.heroCode].frWidth , HeroData[player1.heroCode].frHeight , 1);
+                player2.movementUpdate(HeroData[player2.heroCode].frWidth , HeroData[player2.heroCode].frHeight , 2);
             }
             else{
-                if(orderRender == 1){
-                    player1.movementUpdate(HeroData[player1.heroCode].frWidth , HeroData[player1.heroCode].frHeight , 1);
-                    player2.movementUpdate(HeroData[player2.heroCode].frWidth , HeroData[player2.heroCode].frHeight , 2);
-                }
-                else{
-                    player2.movementUpdate(HeroData[player2.heroCode].frWidth , HeroData[player2.heroCode].frHeight , 2);
-                    player1.movementUpdate(HeroData[player1.heroCode].frWidth , HeroData[player1.heroCode].frHeight , 1);
-                }
-                interactProcess();
+                player2.movementUpdate(HeroData[player2.heroCode].frWidth , HeroData[player2.heroCode].frHeight , 2);
+                player1.movementUpdate(HeroData[player1.heroCode].frWidth , HeroData[player1.heroCode].frHeight , 1);
             }
+        }
+        interactProcess();
+        updateDetails();
+
+
+        if(CheckPause == true){
+            renderPause();
+        }
 // PRESENT RENDERER
         SDL_RenderPresent(gRenderer);
 // MANAGE FPS
@@ -158,22 +180,33 @@ void mainGame(){
     return;
 }
 
-void updateLimit(){
-    player1.limitP1 = 12 -  (HeroData[player1.heroCode].frWidth/2);
-    player1.limitP2 = scrWidth - (13 +  (HeroData[player1.heroCode].frWidth/2));
-    player2.limitP1 = 12 -  (HeroData[player2.heroCode].frWidth/2);
-    player2.limitP2 = scrWidth - (13 +  (HeroData[player2.heroCode].frWidth/2));
+void updateDetails(){
+    SDL_RenderCopy(gRenderer,presentTexture,NULL,NULL);
+    SDL_SetRenderTarget(gRenderer,NULL);
+    updateZoom();
+    renderAvatar(1);
+    renderAvatar(2);
+    renderHPBar(100 - player1.HP , 1);
+    renderHPBar(100 - player2.HP , 2);
 }
 
 void closeMainGame(){
-    SDL_DestroyTexture(gTexture);
-    gTexture = NULL;
+    SDL_DestroyTexture(presentTexture);
+    presentTexture = NULL;
+    SDL_DestroyTexture(background_Texture);
+    background_Texture = NULL;
+
+    SDL_DestroyTexture(P1_ava);
+    P1_ava = NULL;
     SDL_DestroyTexture(P1_HpBar);
     P1_HpBar = NULL;
+    player1.deleteObject(1);
+    P1_Symbol.deleteObject(0);
+
     SDL_DestroyTexture(P2_HpBar);
     P2_HpBar = NULL;
-    player1.deleteObject(1);
     player2.deleteObject(2);
-    P1_Symbol.deleteObject(0);
+    SDL_DestroyTexture(P2_ava);
+    P2_ava = NULL;
     P2_Symbol.deleteObject(0);
 }

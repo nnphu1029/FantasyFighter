@@ -14,27 +14,36 @@
 
 
 extern SDL_Renderer* gRenderer;
-extern SDL_Texture* gTexture;
+extern SDL_Texture* background_Texture;
+extern SDL_Event FantasyFighter;
+extern bool quitFantasyFighter;
+extern int currentState;
+
+extern int orderRender;
 
 extern SDL_Texture* P1_HpBar;
 extern SDL_Texture* P2_HpBar;
-
+extern SDL_Texture* P1_ava;
+extern SDL_Texture* P2_ava;
 extern Object player1;
 extern Object player2;
 extern Object P1_Symbol;
 extern Object P2_Symbol;
-extern int currentState;
 
-extern SDL_Event FantasyFighter;
-extern bool quitFantasyFighter;
-extern int orderRender;
+extern int currentFrameTime, frameTime;
+
 
 extern bool CheckPause;
 extern int PauseMenuState;
 
-void initPlayer();
+void loadingPlayer();
+
+void updateDetails();
+
 void updateLimit();
+
 void mainGame();
+
 void closeMainGame();
 
 #endif // GAME_H

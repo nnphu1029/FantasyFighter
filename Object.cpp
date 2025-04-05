@@ -1,13 +1,13 @@
 #include "Object.h"
 
 Object::Object(int type){
-    heroCode = 0;
+    heroCode = -1;
     oTexture = NULL;
     oWidth = 0 , oHeight = 0;
     frame = FRAMERESET;
     if(type != 0){
         HP = 100;
-        oX = PLAYER1X * (type == 1) +  PLAYER2X * (type == 2);
+        oX = 0;
         oY = 0;
         veloX = 0 , veloY = 0;
         Status = MOVEMENT_IDLE;
@@ -19,12 +19,12 @@ Object::Object(int type){
         checkDoubleJump = false;
         checkHurt = false;
         checkAttack = false;
+        checkAirBorne = false;
 
         beginCastTime = SDL_GetTicks();
         startCooldown = SDL_GetTicks();
     }
 }
-
 
 int Object::getWidth(){ return oWidth;}
 
@@ -34,17 +34,26 @@ SDL_Texture* Object::getTexture(){ return oTexture;}
 
 int Object::getAttackFrame(){ return frame;}
 
+int Object::updateMaxJump(int m){ maxJump = m;}
+
 void Object::Jump(){
     if(Status == MOVEMENT_DEATH or Status == MOVEMENT_HURT or checkAttack == true) return;
     if(oY > PLAYERY)  oY = PLAYERY;
     if(oY < PLAYERY){
         if(checkDoubleJump == true) return;
         checkDoubleJump = true;
-        maxJump = max(oY - 125,0);
+        maxJump = max(oY - 100,0);
     }
-    else maxJump = max(oY - 225,0);
+    else maxJump = max(oY - 200,0);
     frame = FRAMERESET;
     veloY = -2.00;
+}
+
+void Object::AirBorne(){
+    if(checkAirBorne == true) return;
+    checkAttack = false;
+    checkAirBorne = true;
+    Jump();
 }
 
 void Object::Dash(){
@@ -58,7 +67,7 @@ void Object::Dash(){
 }
 
 void Object::Attack(){
-    if(Status == MOVEMENT_DEATH or Status == MOVEMENT_HURT or checkHurt == true) return;
+    if(Status == MOVEMENT_DEATH or Status == MOVEMENT_HURT or checkHurt == true or checkAirBorne == true) return;
     if(checkAttack == true){
         if(Status == MOVEMENT_ATTACK1){
             oX +=  2*Direction;
@@ -191,7 +200,6 @@ void Object::Gravity(){
         else{
             veloY = 0;
             checkDoubleJump = false;
-
         }
     }
     else if(oY < PLAYERY){
@@ -210,6 +218,7 @@ void Object::Gravity(){
             else{
                 veloY = veloY + gravityAccel;
                 veloY = min(veloY,(float)30.0);
+                maxJump = PLAYERY;
             }
         }
     }
@@ -257,6 +266,16 @@ void Object::movementUpdate(int frameWidth , int frameHeight, int type){
             else{
                 veloX = 0;
                 veloY = 0;
+            }
+        }
+        else if(checkAirBorne == true){
+            if(oY > maxJump){
+                veloY = veloY - gravityAccel;
+                veloY = max(veloY,(float)-30.0);
+                veloX = veloX - 5*Direction;
+            }
+            else{
+                checkAirBorne = false;
             }
         }
         else if(checkHurt == true){
@@ -380,7 +399,7 @@ void Object::deleteObject(int type){
     frame = FRAMERESET;
     if(type != 0){
         HP = 100;
-        oX = PLAYER1X * (type == 1) +  PLAYER2X * (type == 2);
+        oX = 0;
         oY = 0;
         veloX = 0 , veloY = 0;
         Status = MOVEMENT_IDLE;
@@ -395,8 +414,8 @@ void Object::deleteObject(int type){
 
 void Object::xUpdate(){
     oX = oX + (int)veloX;
-    oX = max(oX , limitP1);
-    oX = min(oX , limitP2);
+    oX = max(oX , limitLeft);
+    oX = min(oX , limitRight);
 }
 
 void Object::yUpdate(){
@@ -471,5 +490,12 @@ void Object::updateMainBody(int frameWidth, int frameHeight){
     }
 }
 
-
+void Object::setInitLocate(int type){
+    limitLeft = 15 -  (HeroData[heroCode].frWidth/2);
+    limitRight = scrWidth - (15 +  (HeroData[heroCode].frWidth/2));
+    if(type == 1){
+        oX = limitLeft + 100;
+    }
+    else oX = limitRight - 100;
+}
 

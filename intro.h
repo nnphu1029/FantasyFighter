@@ -12,6 +12,7 @@ using namespace std;
 extern SDL_Event FantasyFighter;
 extern bool quitFantasyFighter;
 extern int currentState;
+extern int currentFrameTime, frameTime;
 
 extern Object startButton;
 

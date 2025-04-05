@@ -1,11 +1,22 @@
 #include "pause.h"
 
+Object QuitGameButton(0);
+Object ResumeButton(0);
+Object MenuButton(0);
+SDL_Texture* PauseTexture = NULL;
+bool CheckPause = false;
+int PauseMenuState = 0;
+int QuitGameButtonFrame = FRAMERESET;
+int ResumeButtonFrame = FRAMERESET;
+int MenuButtonFrame = FRAMERESET;
+
 void initPause(){
     PauseTexture = loadTexture("image/PAUSE_menu.png");
     if(PauseTexture == NULL){
         cout << "Load Texture Failed: " << "image/PAUSE_menu.png" << endl;
         return;
     }
+
     if(!QuitGameButton.loadFromFile("image/QuitGameButton.png")){
         cout << "Could not load:" << "image/QuitGameButton.png" << endl;
         return;
@@ -30,23 +41,35 @@ void renderPause(){
     else{
         ResumeButtonFrame = FRAMERESET;
     }
-    if(PauseMenuState == 1){
-        MenuButtonFrame = min(MenuButtonFrame + 3,BUTTONFRAME - 1);
-    }
-    else{
-        MenuButtonFrame = FRAMERESET;
-    }
-    if(PauseMenuState == 2){
-        QuitGameButtonFrame = min(QuitGameButtonFrame + 3,BUTTONFRAME - 1);
-    }
-    else{
-        QuitGameButtonFrame = FRAMERESET;
-    }
     ResumeButton.render(PauseButton[0].x,PauseButton[0].y,0,ResumeButtonFrame*60,250,60,0);
 
-    MenuButton.render(PauseButton[1].x,PauseButton[1].y,0,MenuButtonFrame*60,250,60,0);
+    if(currentState == MAINGAME){
+        if(PauseMenuState == 1){
+            MenuButtonFrame = min(MenuButtonFrame + 3,BUTTONFRAME - 1);
+        }
+        else{
+            MenuButtonFrame = FRAMERESET;
+        }
+        MenuButton.render(PauseButton[1].x,PauseButton[1].y,0,MenuButtonFrame*60,250,60,0);
 
-    QuitGameButton.render(PauseButton[2].x,PauseButton[2].y,0,QuitGameButtonFrame*60,250,60,0);
+        if(PauseMenuState == 2){
+            QuitGameButtonFrame = min(QuitGameButtonFrame + 3,BUTTONFRAME - 1);
+        }
+        else{
+            QuitGameButtonFrame = FRAMERESET;
+        }
+        QuitGameButton.render(PauseButton[2].x,PauseButton[2].y,0,QuitGameButtonFrame*60,250,60,0);
+    }
+    else{
+        if(PauseMenuState == 1){
+            QuitGameButtonFrame = min(QuitGameButtonFrame + 3,BUTTONFRAME - 1);
+        }
+        else{
+            QuitGameButtonFrame = FRAMERESET;
+        }
+        QuitGameButton.render(PauseButton[1].x,PauseButton[1].y,0,QuitGameButtonFrame*60,250,60,0);
+    }
+
     if(CheckPause == false){
         closePause();
     }

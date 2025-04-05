@@ -1,5 +1,8 @@
 #include "init.h"
 
+SDL_Window* window = NULL;
+SDL_Renderer* gRenderer = NULL;
+bool check = false;
 
 void Init(){
     check = true;
@@ -25,6 +28,7 @@ void Init(){
         check = false;
     }
     SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+
     int imgFlags = IMG_INIT_PNG;
     if(!(IMG_Init(imgFlags) and imgFlags)){
         cout << "PNG INIT Error! SDL_image Error: %s\n!" << endl;
@@ -50,8 +54,8 @@ SDL_Texture* loadTexture(string path){
 }
 
 void EndGame(){
-    SDL_DestroyTexture(gTexture);
-    gTexture = NULL;
+    SDL_DestroyTexture(background_Texture);
+    background_Texture = NULL;
     SDL_DestroyTexture(P1_HpBar);
     P1_HpBar = NULL;
     SDL_DestroyTexture(P2_HpBar);
@@ -68,6 +72,12 @@ void EndGame(){
 
     P1_Symbol.deleteObject(0);
     P2_Symbol.deleteObject(0);
+
+    SDL_DestroyTexture(PauseTexture);
+    PauseTexture = NULL;
+    QuitGameButton.deleteObject(0);
+    ResumeButton.deleteObject(0);
+    MenuButton.deleteObject(0);
 
     SDL_DestroyRenderer(gRenderer);
     gRenderer = NULL;

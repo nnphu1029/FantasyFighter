@@ -1,5 +1,9 @@
 #include "intro.h"
 
+Object openingTheme(0);
+Object startButton(0);
+SDL_Texture* introTexture = NULL;
+
 void initIntro(){
     introTexture = loadTexture("image/intro.png");
     if(introTexture == NULL){
@@ -44,13 +48,9 @@ void renderIntro(){
                                     CheckPause = false;
                                     break;
                                 case 1:
-                                    currentState = MENU;
-                                    quitIntro = true;
-                                    CheckPause = false;
-                                    break;
-                                case 2:
                                     quitIntro = true;
                                     quitFantasyFighter = true;
+                                    CheckPause = false;
                                     break;
                             }
                             break;
@@ -105,7 +105,9 @@ void renderIntro(){
         }
     }
     closeIntro();
-    renderOpening();
+    if(quitFantasyFighter != true){
+        renderOpening();
+    }
     return;
 }
 void closeIntro(){

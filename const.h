@@ -14,25 +14,37 @@ const int TARGET_FPS = 20;
 const float TARGET_FRAME_TIME = 1000.0f / TARGET_FPS;
 const int OPENINGFRAME = 40;
 const int BUTTONFRAME = 20;
-
-// PHYSIC CONSTANT
-const float gravityAccel = 3.5f;
-const int ATTACKTIME = 400;
-const int SPECCOOLDOWN = 500;
-
-// INTIAL DATA
-const int PLAYER1X = -200;
-const int PLAYERY = scrHeight - 200;
-const int PLAYER2X = scrWidth - 300;
-const int FRAMERESET = 0;
+const int FRAMEHEIGHT = 250;
 
 enum GameState{
     INTRO,
     MENU,
     MAINGAME,
-    EXIT,
     OPENING,
     TOTAL_STATE
+};
+
+const string MapCode[7] = {
+    "image/map_1.png",
+    "image/map_2.png",
+    "image/map_3.png",
+    "image/map_4.png",
+    "image/map_5.png",
+    "image/map_6.png"
+};
+
+const SDL_Rect menuHero[10] = {
+    {155,50,108,125} , {290,50,108,125} , {405,50,108,125},
+    {155,190,108,125} , {290,190,108,125} , {405,190,108,125},
+    {155,330,108,125} , {290,330,108,125} , {405,330,108,125} ,
+    {155,445,108,125}
+};
+
+const SDL_Rect menuMap[7] = {
+    {601,41,210,141}  , {824,41,210,141},
+    {601,184,210,141} , {824,184,210,141},
+    {601,324,210,141} , {824,324,210,141},
+                        {824,454,210,141}
 };
 
 
