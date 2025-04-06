@@ -7,6 +7,8 @@ SDL_Texture* P2_HpBar = NULL;
 SDL_Texture* P1_ava = NULL;
 SDL_Texture* P2_ava = NULL;
 
+SDL_Rect WinnerCamera = {0,350,500,250};
+
 
 bool MouseClick(SDL_Rect mouseZone){
     int x, y;
@@ -26,6 +28,10 @@ bool mouseInButton(SDL_Rect mouseZone){
 }
 
 void updateZoom(){
+    if(Winner != -1){
+        SDL_RenderCopy(gRenderer,presentTexture,&WinnerCamera,NULL);
+        return;
+    }
     SDL_Rect camera = {0,0,scrWidth , scrHeight};
     int left = min(player1.oX + (HeroData[player1.heroCode].frWidth/2) - 15,
                    player2.oX + (HeroData[player2.heroCode].frWidth/2) - 15);
@@ -39,12 +45,15 @@ void updateZoom(){
     camera.y = scrHeight - camera.h;
 
     SDL_RenderCopy(gRenderer,presentTexture,&camera,NULL);
+
     return;
 }
 
 void interactProcess(){
-    P1_Symbol.render(player1.oX + (HeroData[player1.heroCode].frWidth/2) - 15,player1.oY + 50, 0 , 0 ,25,26,0);
-    P2_Symbol.render(player2.oX + (HeroData[player2.heroCode].frWidth/2) - 15,player2.oY + 50, 0 , 0 ,25,26,0);
+    if(Winner == -1){
+        P1_Symbol.render(player1.oX + (HeroData[player1.heroCode].frWidth/2) - 15,player1.oY + 50, 0 , 0 ,25,26,0);
+        P2_Symbol.render(player2.oX + (HeroData[player2.heroCode].frWidth/2) - 15,player2.oY + 50, 0 , 0 ,25,26,0);
+    }
     checkHit();
     player1.updateDirection(player2.oX + (HeroData[player2.heroCode].frWidth/2) - 15 , player1.oX + (HeroData[player1.heroCode].frWidth/2) - 15);
     player2.updateDirection(player1.oX + (HeroData[player1.heroCode].frWidth/2) - 15 , player2.oX + (HeroData[player2.heroCode].frWidth/2) - 15);
@@ -52,13 +61,16 @@ void interactProcess(){
     if(player1.HP <= 0 or player2.HP <= 0){
         if(player1.HP <= 0){
             player1.Dead();
-            cout << "player 2 Win" << endl;
+            Winner = 2;
+            WinnerCamera.x = max(min(player2.oX + HeroData[player2.heroCode].frWidth/2 - 250,700),0);
+            player2.checkIf_I_Win = true;
         }
         if(player2.HP <= 0){
             player2.Dead();
-            cout << "player 1 Win" << endl;
+            Winner = 1;
+            WinnerCamera.x = max(min(player1.oX + HeroData[player1.heroCode].frWidth/2 - 250,700),0);
+            player1.checkIf_I_Win = true;
         }
-        CheckPause = true;
     }
     return;
 }

@@ -46,8 +46,10 @@ struct skill{
 
 enum SkillEffect{
     NONE,
+    SHIELD_BREAK,
+    ANTI_BLOCK,
     HARASS,
-    HPSTEAL,
+    HP_STEAL,
     STUN,
     TELE,
     AIRBORNE,
@@ -79,15 +81,15 @@ const HeroSpec HeroData[10] = {
         {{90 , 60 , 120 , 110} , 7  , 1 , 0 , NONE},
         {{90 , 60 , 120 , 110} , 14 , 1 , 0 , NONE},
         {{90 , 60 , 120 , 110} , 22 , 2 , 0 , NONE},
-        {{90 , 60 , 120 , 110} , 7  , 2 , 0 , NONE},
-        {{90 , 60 , 120 , 110} , 22 , 60, 0 , HPSTEAL}
+        {{90 , 60 , 120 , 110} , 7  , 2 , 0 , SHIELD_BREAK},
+        {{90 , 60 , 120 , 110} , 22 , 60, 0 , HP_STEAL}
     },
     {"image/SamuraiRonin.png", "image/ava02.png" , 250 , 250 ,
         8 , 2 , 8 , 8 , 4  , 6 , {115 , 86 , 20 , 70},
         {{100 , 65 , 133 , 87} , 6 , 1 , 0 , NONE},
         {{100 , 65 , 133 , 87} , 6 , 1 , 0 , NONE},
         {{100 , 65 , 133 , 87} , 6 , 2 , 0 , NONE},
-        {{100 , 65 , 133 , 87} , 6 , 2 , 0 , NONE},
+        {{100 , 65 , 133 , 87} , 6 , 2 , 0 , SHIELD_BREAK},
         {{100 , 65 , 133 , 87} , 12 , 5, 0 , TELE}
     },
     {"image/WindAssasin.png" , "image/ava03.png", 563, 250,
@@ -95,7 +97,7 @@ const HeroSpec HeroData[10] = {
         {{90 , 60 , 120 , 110} , 8 , 1 , 0 , NONE},
         {{90 , 60 , 120 , 110} , 18, 1 , 0 , NONE},
         {{90 , 60 , 120 , 110} , 26, 2 , 0 , NONE},
-        {{90 , 60 , 120 , 110} , 8 , 2 , 0 , NONE},
+        {{90 , 60 , 120 , 110} , 8 , 2 , 0 , SHIELD_BREAK},
         {{90 , 60 , 120 , 110} , 26, 60 , 0 ,HARASS}
     },
     {"image/FlameKnight.png" , "image/ava04.png" , 563, 250,
@@ -103,7 +105,7 @@ const HeroSpec HeroData[10] = {
         {{90 , 60 , 120 , 110} , 8 , 1 , 0 , NONE},
         {{90 , 60 , 120 , 110} , 18, 1 , 0 , NONE},
         {{90 , 60 , 120 , 110} , 26, 2 , 0 , NONE},
-        {{90 , 60 , 120 , 110} , 8 , 2 , 0 , NONE},
+        {{90 , 60 , 120 , 110} , 8 , 2 , 0 , SHIELD_BREAK},
         {{90 , 60 , 120 , 110} , 18, 5 , 0 , STUN}
     },
 

@@ -17,7 +17,7 @@ using namespace std;
 int currentFrameTime, frameTime;
 SDL_Event FantasyFighter;
 bool quitFantasyFighter = false;
-int currentState = MENU;
+int currentState = INTRO;
 
 
 int main(int argc, char* args[]){
@@ -32,7 +32,6 @@ int main(int argc, char* args[]){
                 quitFantasyFighter = true;
             }
         }
-        cout << currentState << endl;
         switch(currentState){
             case INTRO:
                 renderIntro();

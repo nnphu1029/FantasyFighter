@@ -11,7 +11,7 @@ Object::Object(int type){
         oY = 0;
         veloX = 0 , veloY = 0;
         Status = MOVEMENT_IDLE;
-
+        checkIf_I_Win = false;
         maxJump = PLAYERY;
         frame = FRAMERESET;
         Direction = DIRECTION_RIGHT * (type == 1) + DIRECTION_LEFT * (type == 2);
@@ -34,7 +34,7 @@ SDL_Texture* Object::getTexture(){ return oTexture;}
 
 int Object::getAttackFrame(){ return frame;}
 
-int Object::updateMaxJump(int m){ maxJump = m;}
+void Object::updateMaxJump(int m){ maxJump = m; return;}
 
 void Object::Jump(){
     if(Status == MOVEMENT_DEATH or Status == MOVEMENT_HURT or checkAttack == true) return;
@@ -255,75 +255,86 @@ void Object::castMoving(int type){
 }
 
 void Object::movementUpdate(int frameWidth , int frameHeight, int type){
-    if(Status != MOVEMENT_DEATH){
-        if(checkAttack == true){
-            castAttack();
-            updateHitBox(frameWidth,frameHeight);
-            if(checkAttack == false){
-                frame = FRAMERESET;
-                Status = MOVEMENT_IDLE;
-            }
-            else{
-                veloX = 0;
-                veloY = 0;
-            }
-        }
-        else if(checkAirBorne == true){
-            if(oY > maxJump){
-                veloY = veloY - gravityAccel;
-                veloY = max(veloY,(float)-30.0);
-                veloX = veloX - 5*Direction;
-            }
-            else{
-                checkAirBorne = false;
-            }
-        }
-        else if(checkHurt == true){
-            Status = MOVEMENT_HURT;
-            frame = (frame + 1);
-            if(frame >= HeroData[heroCode].HurtFrame){
-                checkHurt = false;
-                Status = MOVEMENT_IDLE;
-                frame = FRAMERESET;
-                return;
-            }
-        }
-        else{
-            if(Status == MOVEMENT_DASH){
-                frame = (frame + 1);
-                if(frame == HeroData[heroCode].DashFrame){
+    if(checkIf_I_Win == false){
+        if(Status != MOVEMENT_DEATH){
+            if(checkAttack == true){
+                castAttack();
+                updateHitBox(frameWidth,frameHeight);
+                if(checkAttack == false){
+                    frame = FRAMERESET;
                     Status = MOVEMENT_IDLE;
                 }
+                else{
+                    veloX = 0;
+                    veloY = 0;
+                }
             }
-            else if(Status == MOVEMENT_BLOCK){
-                if((objectFlag[SDL_SCANCODE_S] and type == 1) or (objectFlag[SDL_SCANCODE_DOWN] and type == 2)){
-                   veloX = 0;
-                    frame = frame + 1;
-                    if(frame == HeroData[heroCode].BlockFrame){
-                        frame = frame - 1;
+            else if(checkAirBorne == true){
+                if(oY > maxJump){
+                    veloY = veloY - gravityAccel;
+                    veloY = max(veloY,(float)-30.0);
+                    veloX = veloX - 5*Direction;
+                }
+                else{
+                    checkAirBorne = false;
+                }
+            }
+            else if(checkHurt == true){
+                Status = MOVEMENT_HURT;
+                frame = (frame + 1);
+                if(frame >= HeroData[heroCode].HurtFrame){
+                    checkHurt = false;
+                    Status = MOVEMENT_IDLE;
+                    frame = FRAMERESET;
+                    return;
+                }
+            }
+            else{
+                if(Status == MOVEMENT_DASH){
+                    frame = (frame + 1);
+                    if(frame == HeroData[heroCode].DashFrame){
+                        Status = MOVEMENT_IDLE;
+                    }
+                }
+                else if(Status == MOVEMENT_BLOCK){
+                    if((objectFlag[SDL_SCANCODE_S] and type == 1) or (objectFlag[SDL_SCANCODE_DOWN] and type == 2)){
+                       veloX = 0;
+                        frame = frame + 1;
+                        if(frame == HeroData[heroCode].BlockFrame){
+                            frame = frame - 1;
+                        }
+                    }
+                    else{
+                        Status = MOVEMENT_IDLE;
+                        frame = FRAMERESET;
                     }
                 }
                 else{
-                    Status = MOVEMENT_IDLE;
-                    frame = FRAMERESET;
+                    castMoving(type);
+                    frame = (frame + 1)%HeroData[heroCode].MovingFrame;
                 }
             }
-            else{
-                castMoving(type);
-                frame = (frame + 1)%HeroData[heroCode].MovingFrame;
+            Gravity();
+            xUpdate();
+            yUpdate();
+            updateMainBody(frameWidth,frameWidth);
+        }
+        else{
+            Status = MOVEMENT_DEATH;
+            frame = frame + 1;
+            if(frame == HeroData[heroCode].DeadFrame){
+                frame -= 1;
             }
         }
+    }
+    else{
+        veloX = 0;
+        veloY = 0;
+        Status = MOVEMENT_IDLE;
+        frame = (frame + 1)%HeroData[heroCode].MovingFrame;
         Gravity();
         xUpdate();
         yUpdate();
-        updateMainBody(frameWidth,frameWidth);
-    }
-    else{
-        Status = MOVEMENT_DEATH;
-        frame = frame + 1;
-        if(frame == HeroData[heroCode].DeadFrame){
-            frame -= 1;
-        }
     }
     render(oX , oY  , frame * HeroData[heroCode].frWidth ,  Status * HeroData[heroCode].frHeight ,
            HeroData[heroCode].frWidth , HeroData[heroCode].frHeight, 1 * (Direction == DIRECTION_LEFT));
@@ -391,6 +402,7 @@ bool Object::loadFromFile(string path){
     oTexture = newTexture;
     return(oTexture != NULL);
 }
+
 
 void Object::deleteObject(int type){
     SDL_DestroyTexture(oTexture);

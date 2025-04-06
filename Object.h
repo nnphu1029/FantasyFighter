@@ -36,6 +36,7 @@ class Object{
         int oX , oY;
         SDL_Rect hitbox;
         SDL_Rect mainBody;
+        bool checkIf_I_Win;
         int Status , HP , Direction , limitLeft , limitRight;
 // GET FUNCTION
         Object(int);
@@ -43,7 +44,7 @@ class Object{
         int getHeight();
         SDL_Texture* getTexture();
         int getAttackFrame();
-        int updateMaxJump(int);
+        void updateMaxJump(int);
         void setInitLocate(int);
 // STATUS FUNCTION
         void Dash();

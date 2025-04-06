@@ -22,6 +22,9 @@ extern SDL_Texture* P1_ava;
 extern SDL_Texture* P2_ava;
 extern bool CheckPause;
 
+extern int Winner;
+extern SDL_Rect WinnerCamera;
+
 void updateZoom();
 
 bool mouseInButton(SDL_Rect);

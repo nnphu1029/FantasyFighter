@@ -6,6 +6,7 @@ Object player1(1);
 Object player2(2);
 int orderRender = 1;
 
+
 void loadingPlayer(){
 // SET UP ZOOM TEXTURE
     presentTexture = SDL_CreateTexture(gRenderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, scrWidth, scrHeight);
@@ -58,12 +59,20 @@ void mainGame(){
     loadingPlayer();
 
     bool quitGame = false;
+    CheckPause = false;
+    Winner = -1;
+
     while(!quitGame){
         currentFrameTime = SDL_GetTicks();
+
         SDL_SetRenderTarget(gRenderer,presentTexture);
+
         SDL_RenderClear(gRenderer);
-        cout << player1.Status << " " << player2.Status << endl;
+
+//        cout << player1.Status << " " << player2.Status << endl;
+//        cout << CheckPause << endl;
         SDL_RenderCopy(gRenderer,background_Texture,NULL,NULL);
+
         while(SDL_PollEvent(&FantasyFighter) != 0){
             if(FantasyFighter.type == SDL_QUIT){
                 quitGame = true;
@@ -71,81 +80,23 @@ void mainGame(){
                 continue;
             }
             if(FantasyFighter.type == SDL_KEYDOWN){
-                if(CheckPause == true){
-                    switch (FantasyFighter.key.keysym.sym){
-                        case(SDLK_UP):
-                            PauseMenuState = max(PauseMenuState - 1,0);
-                            break;
-                        case(SDLK_DOWN):
-                            PauseMenuState = min(PauseMenuState + 1,2);
-                            break;
-                        case (SDLK_RETURN):
-                            switch (PauseMenuState){
-                                case 0:
-                                    CheckPause = false;
-                                    break;
-                                case 1:
-                                    currentState = MENU;
-                                    quitGame = true;
-                                    CheckPause = false;
-                                    break;
-                                case 2:
-                                    quitGame = true;
-                                    quitFantasyFighter = true;
-                                    break;
-                            }
-                            break;
-                    }
-                    break;
+                if(Winner != -1){
+                    VictoryKeyPressProcess(quitGame);
                 }
                 else{
-                    switch (FantasyFighter.key.keysym.sym){
-                        case SDLK_ESCAPE:
-                            CheckPause = true;
-                            break;
-                        case(SDLK_j):
-                            player1.Attack();
-                            break;
-                        case(SDLK_w):
-                            player1.Jump();
-                            break;
-                        case(SDLK_l):
-                            player1.Dash();
-                            break;
-                        case(SDLK_s):
-                            player1.Block();
-                            break;
-                        case(SDLK_u):
-                            player1.SpecAttack();
-                            break;
-
-                        case(SDLK_KP_4):
-                            player2.Attack();
-                            break;
-                        case(SDLK_UP):
-                            player2.Jump();
-                            break;
-                        case(SDLK_KP_6):
-                            player2.Dash();
-                            break;
-                        case(SDLK_DOWN):
-                            player2.Block();
-                            break;
-                        case (SDLK_KP_7):
-                            player2.SpecAttack();
-                            break;
-                        case SDLK_t:
-                            player1.HP = 0;
-                            player2.HP = 0;
-                            break;
-                        }
+                    if(CheckPause == true){
+                        PauseKeyPressProcess(quitGame);
+                    }
+                    else{
+                        mainGameKeyPressProcess();
                     }
                 }
             }
-
-        player1.objectFlag = SDL_GetKeyboardState(NULL);
-        player2.objectFlag = SDL_GetKeyboardState(NULL);
-
+        }
+        if(Winner == -1){
+            player1.objectFlag = SDL_GetKeyboardState(NULL);
+            player2.objectFlag = SDL_GetKeyboardState(NULL);
+        }
 
         if(CheckPause == true){
             player1.ZA_WARUDO();
@@ -161,12 +112,16 @@ void mainGame(){
                 player1.movementUpdate(HeroData[player1.heroCode].frWidth , HeroData[player1.heroCode].frHeight , 1);
             }
         }
+
         interactProcess();
         updateDetails();
-
-
-        if(CheckPause == true){
-            renderPause();
+        if(Winner == -1){
+            if(CheckPause == true){
+                renderPause();
+            }
+        }
+        else{
+            renderVictory();
         }
 // PRESENT RENDERER
         SDL_RenderPresent(gRenderer);
@@ -180,14 +135,47 @@ void mainGame(){
     return;
 }
 
+void mainGameKeyPressProcess(){
+    switch (FantasyFighter.key.keysym.sym){
+        case SDLK_ESCAPE:
+            CheckPause = true; break;
+        case(SDLK_j):
+            player1.Attack(); break;
+        case(SDLK_w):
+            player1.Jump(); break;
+        case(SDLK_l):
+            player1.Dash(); break;
+        case(SDLK_s):
+            player1.Block(); break;
+        case(SDLK_u):
+            player1.SpecAttack();break;
+
+        case(SDLK_KP_4):
+            player2.Attack(); break;
+        case(SDLK_UP):
+            player2.Jump(); break;
+        case(SDLK_KP_6):
+            player2.Dash(); break;
+        case(SDLK_DOWN):
+            player2.Block(); break;
+        case (SDLK_KP_7):
+            player2.SpecAttack(); break;
+        case SDLK_t:
+            player1.HP = 0;
+            player2.HP = 0; break;
+    }
+}
+
 void updateDetails(){
     SDL_RenderCopy(gRenderer,presentTexture,NULL,NULL);
     SDL_SetRenderTarget(gRenderer,NULL);
     updateZoom();
-    renderAvatar(1);
-    renderAvatar(2);
-    renderHPBar(100 - player1.HP , 1);
-    renderHPBar(100 - player2.HP , 2);
+    if(Winner == -1){
+        renderAvatar(1);
+        renderAvatar(2);
+        renderHPBar(100 - player1.HP , 1);
+        renderHPBar(100 - player2.HP , 2);
+    }
 }
 
 void closeMainGame(){

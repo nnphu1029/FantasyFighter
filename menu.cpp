@@ -44,6 +44,7 @@ void RenderMenu(){
     bool checkPlayer2Select = false;
     bool checkMapSelect = false;
     bool quitMenu = false;
+    CheckPause = false;
 
     int P1_Slot = 0;
     int P2_Slot = 0;

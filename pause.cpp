@@ -44,6 +44,8 @@ void renderPause(){
     ResumeButton.render(PauseButton[0].x,PauseButton[0].y,0,ResumeButtonFrame*60,250,60,0);
 
     if(currentState == MAINGAME){
+        PauseMenuState = PauseMenuState % 3;
+
         if(PauseMenuState == 1){
             MenuButtonFrame = min(MenuButtonFrame + 3,BUTTONFRAME - 1);
         }
@@ -61,6 +63,8 @@ void renderPause(){
         QuitGameButton.render(PauseButton[2].x,PauseButton[2].y,0,QuitGameButtonFrame*60,250,60,0);
     }
     else{
+        PauseMenuState = PauseMenuState%2;
+
         if(PauseMenuState == 1){
             QuitGameButtonFrame = min(QuitGameButtonFrame + 3,BUTTONFRAME - 1);
         }
@@ -73,11 +77,40 @@ void renderPause(){
     if(CheckPause == false){
         closePause();
     }
+    return;
 }
+
+void PauseKeyPressProcess(bool &quit){
+    switch (FantasyFighter.key.keysym.sym){
+        case(SDLK_UP):
+            PauseMenuState = max(PauseMenuState - 1,0);
+            break;
+        case(SDLK_DOWN):
+            PauseMenuState = min(PauseMenuState + 1,2);
+            break;
+        case (SDLK_RETURN):
+            switch (PauseMenuState){
+                case 0:
+                    CheckPause = false; break;
+                case 1:
+                    currentState = MENU;
+                    quit = true;
+                    CheckPause = false; break;
+                case 2:
+                    quit = true;
+                    CheckPause = false;
+                    quitFantasyFighter = true; break;
+            }
+            break;
+    }
+    return;
+}
+
 void closePause(){
     SDL_DestroyTexture(PauseTexture);
     PauseTexture = NULL;
     QuitGameButton.deleteObject(0);
     ResumeButton.deleteObject(0);
     MenuButton.deleteObject(0);
+    return;
 }
