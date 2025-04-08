@@ -75,6 +75,7 @@ struct HeroSpec{
     skill SpecSkill;
 };
 
+//HERO STAT
 const HeroSpec HeroData[10] = {
     {"image/FantasyWarrior.png" , "image/ava01.png" , 250 , 250 ,
         8 , 3 , 8 , 5 ,  3 , 7 , {107 , 86 , 37 , 70},
@@ -144,7 +145,7 @@ const HeroSpec HeroData[10] = {
         8 , 2 , 8 , 5 ,  3 , 7 , {124, 127, 26 , 53},
         {{171, 37 , 65 , 95} , 8  , 5 , 3 , NONE , "sound/Explosion.wav"},
         {{148,33,95,101} , 16 , 5 , 12 , NONE , "sound/Explosion.wav"},
-        {{171 , 37 , 65 , 95 } , 24 , 10 , 13 , SHIELD_BREAK , "sound/Explosion.wav"},
+        {{171 , 37 , 65 , 95 } , 24 , 10 , 17 , SHIELD_BREAK , "sound/Explosion.wav"},
         {{147 , 33 , 101 , 137} , 8  , 15 , 4 , NONE , "sound/Explosion.wav"},
         {{0 , 0 ,1200, 600 } , 16 , 16 , 9 , HP_STEAL , "sound/Evil.wav"}
     }
