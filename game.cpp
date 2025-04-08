@@ -142,6 +142,9 @@ void mainGame(){
         }
     }
     closeMainGame();
+    if(quitFantasyFighter != true){
+        renderOpening();
+    }
     return;
 }
 
