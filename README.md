@@ -1,1 +1,1 @@
-# FantasyFighter
+# FantasyFighter Released
