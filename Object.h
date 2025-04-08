@@ -22,6 +22,7 @@ class Object{
         bool checkAirBorne;
         int beginCastTime , endCastTime;
         int startCooldown , checkCooldown ;
+        int coolDownShield;
 // UPDATE FUNCTION REQUIRED
         void Gravity();
         void xUpdate();
@@ -54,7 +55,10 @@ class Object{
         void castAttack();
         void Block();
         void Hurt(int);
-        void AirBorne();
+
+        void AirBorne(int);
+        void ShieldBreak(int);
+
         void Dead();
         void castMoving(int);
 // UPDATE FUNCTION

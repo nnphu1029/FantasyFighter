@@ -51,6 +51,9 @@ void loadingPlayer(){
     }
     player1.setInitLocate(1);
     player2.setInitLocate(2);
+    player1.checkIf_I_Win = false;
+    player2.checkIf_I_Win = false;
+
 }
 
 void mainGame(){
@@ -64,7 +67,6 @@ void mainGame(){
 
     while(!quitGame){
         currentFrameTime = SDL_GetTicks();
-
         SDL_SetRenderTarget(gRenderer,presentTexture);
 
         SDL_RenderClear(gRenderer);
@@ -97,7 +99,6 @@ void mainGame(){
             player1.objectFlag = SDL_GetKeyboardState(NULL);
             player2.objectFlag = SDL_GetKeyboardState(NULL);
         }
-
         if(CheckPause == true){
             player1.ZA_WARUDO();
             player2.ZA_WARUDO();

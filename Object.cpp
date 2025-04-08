@@ -8,7 +8,7 @@ Object::Object(int type){
     if(type != 0){
         HP = 100;
         oX = 0;
-        oY = 0;
+        oY = 300;
         veloX = 0 , veloY = 0;
         Status = MOVEMENT_IDLE;
         checkIf_I_Win = false;
@@ -21,6 +21,7 @@ Object::Object(int type){
         checkAttack = false;
         checkAirBorne = false;
 
+        coolDownShield = SDL_GetTicks();
         beginCastTime = SDL_GetTicks();
         startCooldown = SDL_GetTicks();
     }
@@ -49,11 +50,18 @@ void Object::Jump(){
     veloY = -2.00;
 }
 
-void Object::AirBorne(){
+void Object::AirBorne(int dame){
     if(checkAirBorne == true) return;
+    HP = max(HP - dame,0);
     checkAttack = false;
     checkAirBorne = true;
     Jump();
+}
+
+void Object::ShieldBreak(int dame){
+    Hurt(dame);
+    coolDownShield = SDL_GetTicks();
+    veloX = -30*Direction;
 }
 
 void Object::Dash(){
@@ -163,10 +171,9 @@ void Object::castAttack(){
 }
 
 void Object::Block(){
+    if(SDL_GetTicks() - coolDownShield < 3000) return;
     if(Status == MOVEMENT_DEATH or Status == MOVEMENT_HURT or checkAttack == true) return;
-    if(Status == MOVEMENT_BLOCK){
-        return;
-    }
+    if(Status == MOVEMENT_BLOCK) return;
     veloX = 0;
     frame = FRAMERESET;
     Status = MOVEMENT_BLOCK;
@@ -403,7 +410,6 @@ bool Object::loadFromFile(string path){
     return(oTexture != NULL);
 }
 
-
 void Object::deleteObject(int type){
     SDL_DestroyTexture(oTexture);
     oTexture = NULL;
@@ -412,15 +418,18 @@ void Object::deleteObject(int type){
     if(type != 0){
         HP = 100;
         oX = 0;
-        oY = 0;
+        oY = 300;
         veloX = 0 , veloY = 0;
         Status = MOVEMENT_IDLE;
+        checkIf_I_Win = false;
         maxJump = PLAYERY;
+        frame = FRAMERESET;
+        Direction = DIRECTION_RIGHT * (type == 1) + DIRECTION_LEFT * (type == 2);
+
         checkDoubleJump = false;
         checkHurt = false;
         checkAttack = false;
-        frame = FRAMERESET;
-        Direction = DIRECTION_RIGHT * (type == 1) + DIRECTION_LEFT * (type == 2);
+        checkAirBorne = false;
     }
 }
 

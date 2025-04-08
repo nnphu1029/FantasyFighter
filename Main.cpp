@@ -17,7 +17,7 @@ using namespace std;
 int currentFrameTime, frameTime;
 SDL_Event FantasyFighter;
 bool quitFantasyFighter = false;
-int currentState = INTRO;
+int currentState = MENU;
 
 
 int main(int argc, char* args[]){
