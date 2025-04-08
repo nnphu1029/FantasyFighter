@@ -3,6 +3,7 @@
 Object openingTheme(0);
 Object startButton(0);
 SDL_Texture* introTexture = NULL;
+Mix_Music* introBackGroundMusic;
 
 void initIntro(){
     introTexture = loadTexture("image/intro.png");
@@ -14,6 +15,15 @@ void initIntro(){
         cout << "Could not load start button:" << "image/startButton.png" << endl;
         return;
     }
+    introBackGroundMusic = Mix_LoadMUS("sound/intro.ogg");
+    if (!introBackGroundMusic) {
+        cout << "Could not load Menu music" << endl;
+        return;
+    }
+    else{
+        Mix_PlayMusic(introBackGroundMusic, -1);
+    }
+    return;
 }
 
 
@@ -34,7 +44,8 @@ void renderIntro(){
                 continue;
             }
             if(FantasyFighter.type == SDL_KEYDOWN){
-                 if(CheckPause == true){
+                Mix_PlayChannel(-1, button, 0);
+                if(CheckPause == true){
                     switch (FantasyFighter.key.keysym.sym){
                         case(SDLK_UP):
                             PauseMenuState = max(PauseMenuState - 1,0);
@@ -111,6 +122,8 @@ void renderIntro(){
     return;
 }
 void closeIntro(){
+    Mix_FreeMusic(introBackGroundMusic);
+    introBackGroundMusic = NULL;
     SDL_DestroyTexture(introTexture);
     introTexture = NULL;
     startButton.deleteObject(0);

@@ -16,7 +16,6 @@ void initPause(){
         cout << "Load Texture Failed: " << "image/PAUSE_menu.png" << endl;
         return;
     }
-
     if(!QuitGameButton.loadFromFile("image/QuitGameButton.png")){
         cout << "Could not load:" << "image/QuitGameButton.png" << endl;
         return;
@@ -99,7 +98,8 @@ void PauseKeyPressProcess(bool &quit){
                 case 2:
                     quit = true;
                     CheckPause = false;
-                    quitFantasyFighter = true; break;
+                    quitFantasyFighter = true;
+                    break;
             }
             break;
     }
@@ -109,8 +109,8 @@ void PauseKeyPressProcess(bool &quit){
 void closePause(){
     SDL_DestroyTexture(PauseTexture);
     PauseTexture = NULL;
-    QuitGameButton.deleteObject(0);
-    ResumeButton.deleteObject(0);
-    MenuButton.deleteObject(0);
+    QuitGameButton.deleteObject(1);
+    ResumeButton.deleteObject(1);
+    MenuButton.deleteObject(1);
     return;
 }

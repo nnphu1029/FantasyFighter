@@ -1,6 +1,8 @@
 #ifndef INTRO_H
 #define INTRO_H
 
+//CONTAIN INTRO FUNCTION
+
 #include "const.h"
 #include "Object.h"
 #include "Interact.h"
@@ -15,16 +17,18 @@ extern int currentState;
 extern int currentFrameTime, frameTime;
 
 extern Object startButton;
-
 extern SDL_Texture* introTexture;
 
 extern bool CheckPause;
 extern int PauseMenuState;
 
+//LOADING INTRO RESOURCES
 void initIntro();
 
+//RENDER INTRO
 void renderIntro();
 
+//DELETE INTRO RESOURCES
 void closeIntro();
 
 #endif // INTRO_H

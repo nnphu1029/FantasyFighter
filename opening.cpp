@@ -3,8 +3,8 @@
 
 void renderOpening(){
     if(!openingTheme.loadFromFile("image/OPENINGFF.png")){
-        cout << "Could not load opening theme:" << "image/OPENINGFF.png" << endl;
-        return;
+            cout << "Could not load opening theme:" << "image/OPENINGFF.png" << endl;
+            return;
     }
     int currentFrameTime , frameTime;
     bool quitOpening = false;
@@ -16,14 +16,6 @@ void renderOpening(){
                 quitOpening = true;
                 quitFantasyFighter = true;
                 continue;
-            }
-            if(FantasyFighter.type == SDL_KEYDOWN){
-                switch (FantasyFighter.key.keysym.sym){
-                    case SDLK_ESCAPE:
-                        quitOpening = true;
-                        quitFantasyFighter = true;
-                        break;
-                }
             }
         }
         if(Oframe == OPENINGFRAME){
@@ -39,6 +31,10 @@ void renderOpening(){
         }
     }
     closeOpening();
+    if(quitFantasyFighter == true){
+        EndGame();
+        SDL_Quit();
+    }
     return;
 }
 void closeOpening(){

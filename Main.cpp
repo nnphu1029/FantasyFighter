@@ -17,7 +17,7 @@ using namespace std;
 int currentFrameTime, frameTime;
 SDL_Event FantasyFighter;
 bool quitFantasyFighter = false;
-int currentState = MENU;
+int currentState = INTRO;
 
 
 int main(int argc, char* args[]){
@@ -32,15 +32,28 @@ int main(int argc, char* args[]){
                 quitFantasyFighter = true;
             }
         }
+        if(quitFantasyFighter == true){
+            EndGame();
+            continue;
+        }
         switch(currentState){
             case INTRO:
                 renderIntro();
+                if(quitFantasyFighter == true){
+                    EndGame();
+                }
                 break;
             case MENU:
                 RenderMenu();
+                if(quitFantasyFighter == true){
+                    EndGame();
+                }
                 break;
             case MAINGAME:
                 mainGame();
+                if(quitFantasyFighter == true){
+                    EndGame();
+                }
                 break;
         }
     }

@@ -1,8 +1,8 @@
 #ifndef VICTORY_H
 #define VICTORY_H
 
-#include <SDL.h>
-#include <SDL_image.h>
+//CONTAIN VICTORY FUNCTION
+
 #include <stdio.h>
 #include <string>
 #include "const.h"
@@ -28,13 +28,16 @@ extern Object P2_Symbol;
 const SDL_Rect VictoryButton[3] = {
     {300,500,250,60} , {650,500,250,60}
 };
-
+//LOADING VICTORY MATERIAL
 void initVictory();
 
+//KEYPRESS PROCESSING AT VICTORY
 void VictoryKeyPressProcess(bool&);
 
+//RENDER VICTORY SCREEN
 void renderVictory();
 
+//DELETE VICTORY RESOURCES
 void closeVictory();
 
 #endif //VICTORY_H

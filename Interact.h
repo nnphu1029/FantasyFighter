@@ -1,6 +1,8 @@
 #ifndef INTERACT_H
 #define INTERACT_H
 
+//CONTAIN INTERACT FUNCTION PROCESS WHEN U CLICK OR PLAYER ATTACK
+
 #include<SDL.h>
 #include<string>
 #include<iostream>
@@ -25,21 +27,24 @@ extern bool CheckPause;
 extern int Winner;
 extern SDL_Rect WinnerCamera;
 
+//UPDATE CAMERA
 void updateZoom();
 
+//WHEN CLICK "START" AT INTRO
 bool mouseInButton(SDL_Rect);
-
 bool MouseClick(SDL_Rect);
 
-bool checkStateAttack(int);
-
+//WHEN PLAYER ATTACK
 void interactProcess();
 
+//CHECK PLAYER ATTACK
+bool checkStateAttack(int);
+
+//GET DAME AND SPECIAL SKILL EFFECT
 void checkHit();
 
-
+//RENDER HPBAR AND AVATAR AFTER ZOOM
 void renderHPBar(int , int);
-
 void renderAvatar(int);
 
 

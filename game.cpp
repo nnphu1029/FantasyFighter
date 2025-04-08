@@ -5,7 +5,8 @@ SDL_Texture* presentTexture = NULL;
 Object player1(1);
 Object player2(2);
 int orderRender = 1;
-
+Mix_Music* MainGameBackGroundMusic;
+Mix_Chunk* button;
 
 void loadingPlayer(){
 // SET UP ZOOM TEXTURE
@@ -49,11 +50,19 @@ void loadingPlayer(){
         cout << "Could not load image: " << "image/P2_icon.png" << endl;
         return;
     }
-    player1.setInitLocate(1);
-    player2.setInitLocate(2);
-    player1.checkIf_I_Win = false;
-    player2.checkIf_I_Win = false;
+    player1.setInitPlayer(1);
+    player2.setInitPlayer(2);
 
+    int backgroundMusicCode = rand()%5;
+    MainGameBackGroundMusic = Mix_LoadMUS(mapsound[backgroundMusicCode].c_str());
+    if (!MainGameBackGroundMusic) {
+        cout << "Could not load Main game music" << endl;
+        return;
+    }
+    else{
+        Mix_PlayMusic(MainGameBackGroundMusic, -1);
+    }
+    return;
 }
 
 void mainGame(){
@@ -71,8 +80,6 @@ void mainGame(){
 
         SDL_RenderClear(gRenderer);
 
-//        cout << player1.Status << " " << player2.Status << endl;
-//        cout << CheckPause << endl;
         SDL_RenderCopy(gRenderer,background_Texture,NULL,NULL);
 
         while(SDL_PollEvent(&FantasyFighter) != 0){
@@ -83,10 +90,12 @@ void mainGame(){
             }
             if(FantasyFighter.type == SDL_KEYDOWN){
                 if(Winner != -1){
+                    Mix_PlayChannel(-1, button, 0);
                     VictoryKeyPressProcess(quitGame);
                 }
                 else{
                     if(CheckPause == true){
+                        Mix_PlayChannel(-1, button, 0);
                         PauseKeyPressProcess(quitGame);
                     }
                     else{
@@ -171,7 +180,7 @@ void updateDetails(){
     SDL_RenderCopy(gRenderer,presentTexture,NULL,NULL);
     SDL_SetRenderTarget(gRenderer,NULL);
     updateZoom();
-    if(Winner == -1){
+    if(Winner == -1 and quitFantasyFighter != true){
         renderAvatar(1);
         renderAvatar(2);
         renderHPBar(100 - player1.HP , 1);
@@ -180,6 +189,9 @@ void updateDetails(){
 }
 
 void closeMainGame(){
+    Mix_FreeMusic(MainGameBackGroundMusic);
+    MainGameBackGroundMusic = NULL;
+
     SDL_DestroyTexture(presentTexture);
     presentTexture = NULL;
     SDL_DestroyTexture(background_Texture);

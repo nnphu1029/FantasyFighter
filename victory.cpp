@@ -4,7 +4,7 @@ Object VictorySign(0);
 int Winner = -1;
 int VictorySignFrame = FRAMERESET;
 int VictoryMenuState = 0;
-
+Mix_Chunk* vict;
 
 void initVictory(){
     if(!VictorySign.loadFromFile("image/victory.png")){
@@ -22,6 +22,7 @@ void initVictory(){
         return;
     }
     QuitGameButtonFrame = FRAMERESET;
+    vict = Mix_LoadWAV("sound/victory.wav");
     return;
 }
 
@@ -53,6 +54,7 @@ void VictoryKeyPressProcess(bool &quit){
 void renderVictory(){
     if(VictorySign.getTexture() == NULL){
         initVictory();
+        Mix_PlayChannel(-1, vict, 0);
     }
 
     if(Winner == 1){
@@ -87,6 +89,8 @@ void renderVictory(){
     }
 }
 void closeVictory(){
+    Mix_FreeChunk(vict);
+    vict = NULL;
     VictorySign.deleteObject(0);
     MenuButton.deleteObject(0);
     QuitGameButton.deleteObject(0);

@@ -5,26 +5,6 @@ Object::Object(int type){
     oTexture = NULL;
     oWidth = 0 , oHeight = 0;
     frame = FRAMERESET;
-    if(type != 0){
-        HP = 100;
-        oX = 0;
-        oY = 300;
-        veloX = 0 , veloY = 0;
-        Status = MOVEMENT_IDLE;
-        checkIf_I_Win = false;
-        maxJump = PLAYERY;
-        frame = FRAMERESET;
-        Direction = DIRECTION_RIGHT * (type == 1) + DIRECTION_LEFT * (type == 2);
-
-        checkDoubleJump = false;
-        checkHurt = false;
-        checkAttack = false;
-        checkAirBorne = false;
-
-        coolDownShield = SDL_GetTicks();
-        beginCastTime = SDL_GetTicks();
-        startCooldown = SDL_GetTicks();
-    }
 }
 
 int Object::getWidth(){ return oWidth;}
@@ -34,8 +14,6 @@ int Object::getHeight(){ return oHeight;}
 SDL_Texture* Object::getTexture(){ return oTexture;}
 
 int Object::getAttackFrame(){ return frame;}
-
-void Object::updateMaxJump(int m){ maxJump = m; return;}
 
 void Object::Jump(){
     if(Status == MOVEMENT_DEATH or Status == MOVEMENT_HURT or checkAttack == true) return;
@@ -78,12 +56,14 @@ void Object::Attack(){
     if(Status == MOVEMENT_DEATH or Status == MOVEMENT_HURT or checkHurt == true or checkAirBorne == true) return;
     if(checkAttack == true){
         if(Status == MOVEMENT_ATTACK1){
-            oX +=  2*Direction;
+            oX +=  5*Direction;
             Status = MOVEMENT_ATTACK2;
+            Mix_PlayChannel(-1,Attack2, 0);
         }
         else if(Status == MOVEMENT_ATTACK2){
-            oX +=  2*Direction;
+            oX +=  5*Direction;
             Status = MOVEMENT_ATTACK3;
+            Mix_PlayChannel(-1,Attack3, 0);
         }
         return;
     }
@@ -95,9 +75,11 @@ void Object::Attack(){
         if(Status != MOVEMENT_SPSKILL){
             if(oY < PLAYERY){
                 Status = MOVEMENT_AIRATTACK;
+                Mix_PlayChannel(-1,AirAttack, 0);
             }
             else{
                 Status = MOVEMENT_ATTACK1;
+                Mix_PlayChannel(-1,Attack1, 0);
             }
         }
     }
@@ -110,6 +92,7 @@ void Object::SpecAttack(){
     checkCooldown = SDL_GetTicks();
     if(checkCooldown - startCooldown >= SPECCOOLDOWN){
         Status = MOVEMENT_SPSKILL;
+        Mix_PlayChannel(-1,SpAttack, 0);
         Attack();
     }
     return;
@@ -415,22 +398,30 @@ void Object::deleteObject(int type){
     oTexture = NULL;
     oWidth = 0 , oHeight = 0;
     frame = FRAMERESET;
-    if(type != 0){
-        HP = 100;
-        oX = 0;
-        oY = 300;
-        veloX = 0 , veloY = 0;
-        Status = MOVEMENT_IDLE;
-        checkIf_I_Win = false;
-        maxJump = PLAYERY;
-        frame = FRAMERESET;
-        Direction = DIRECTION_RIGHT * (type == 1) + DIRECTION_LEFT * (type == 2);
+    HP = 100;
+    oX = 0;
+    oY = 300;
+    veloX = 0 , veloY = 0;
+    Status = MOVEMENT_IDLE;
+    checkIf_I_Win = false;
+    maxJump = PLAYERY;
+    frame = FRAMERESET;
+    Direction = DIRECTION_RIGHT * (type == 1) + DIRECTION_LEFT * (type == 2);
 
-        checkDoubleJump = false;
-        checkHurt = false;
-        checkAttack = false;
-        checkAirBorne = false;
-    }
+    Mix_FreeChunk(Attack1);
+    Attack1 = NULL;
+    Mix_FreeChunk(Attack2);
+    Attack2 = NULL;
+    Mix_FreeChunk(Attack3);
+    Attack3 = NULL;
+    Mix_FreeChunk(AirAttack);
+    AirAttack = NULL;
+    Mix_FreeChunk(SpAttack);
+    SpAttack = NULL;
+    checkDoubleJump = false;
+    checkHurt = false;
+    checkAttack = false;
+    checkAirBorne = false;
 }
 
 void Object::xUpdate(){
@@ -511,12 +502,35 @@ void Object::updateMainBody(int frameWidth, int frameHeight){
     }
 }
 
-void Object::setInitLocate(int type){
+void Object::setInitPlayer(int type){
     limitLeft = 15 -  (HeroData[heroCode].frWidth/2);
     limitRight = scrWidth - (15 +  (HeroData[heroCode].frWidth/2));
     if(type == 1){
         oX = limitLeft + 100;
     }
     else oX = limitRight - 100;
+
+    Attack1 = Mix_LoadWAV(HeroData[heroCode].AttackFrame1.sound.c_str());
+    Attack2 = Mix_LoadWAV(HeroData[heroCode].AttackFrame2.sound.c_str());
+    Attack3 = Mix_LoadWAV(HeroData[heroCode].AttackFrame3.sound.c_str());
+    AirAttack = Mix_LoadWAV(HeroData[heroCode].AirAttack.sound.c_str());
+    SpAttack = Mix_LoadWAV(HeroData[heroCode].SpecSkill.sound.c_str());
+
+    HP = 100;
+    veloX = 0 , veloY = 0;
+    Status = MOVEMENT_IDLE;
+    checkIf_I_Win = false;
+    maxJump = PLAYERY;
+    frame = FRAMERESET;
+    Direction = DIRECTION_RIGHT * (type == 1) + DIRECTION_LEFT * (type == 2);
+
+    checkDoubleJump = false;
+    checkHurt = false;
+    checkAttack = false;
+    checkAirBorne = false;
+
+    coolDownShield = SDL_GetTicks();
+    beginCastTime = SDL_GetTicks();
+    startCooldown = SDL_GetTicks();
 }
 

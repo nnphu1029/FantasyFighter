@@ -6,7 +6,6 @@ SDL_Texture* P1_HpBar = NULL;
 SDL_Texture* P2_HpBar = NULL;
 SDL_Texture* P1_ava = NULL;
 SDL_Texture* P2_ava = NULL;
-
 SDL_Rect WinnerCamera = {0,350,500,250};
 
 bool MouseClick(SDL_Rect mouseZone){
@@ -89,7 +88,11 @@ bool checkStateAttack(int type){
 void checkHit(){
     if(checkStateAttack(1) and checkStateAttack(2)){
         if(SDL_HasIntersection(&player1.hitbox,&player2.hitbox)){
-            if(player1.getAttackFrame() == 4){
+            if((player2.getAttackFrame() >= HeroData[player1.heroCode].SpecSkill.TakeHitframe)
+                or (player2.getAttackFrame() >= HeroData[player1.heroCode].AirAttack.TakeHitframe)
+                or (player2.getAttackFrame() >= HeroData[player1.heroCode].AttackFrame1.TakeHitframe)
+                or (player2.getAttackFrame() >= HeroData[player1.heroCode].AttackFrame2.TakeHitframe)
+                or (player2.getAttackFrame() >= HeroData[player1.heroCode].AttackFrame3.TakeHitframe)){
                 player1.AirBorne(5);
                 player2.AirBorne(5);
             }

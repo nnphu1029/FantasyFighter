@@ -34,7 +34,20 @@ void Init(){
         cout << "PNG INIT Error! SDL_image Error: %s\n!" << endl;
         check = false;
     }
+
+    if (SDL_Init(SDL_INIT_AUDIO) < 0) {
+        cout << "Warning: SDL_INIT_AUDIO ERROR!" << endl;
+        check = false;
+    }
+
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+        cout <<  "SDL_mixer INIT ERROR" << endl;
+        check = false;
+    }
+    Mix_VolumeMusic(10);
+    button = Mix_LoadWAV("sound/click.wav");
     return;
+
 }
 
 
@@ -54,6 +67,9 @@ SDL_Texture* loadTexture(string path){
 }
 
 void EndGame(){
+    Mix_FreeChunk(button);
+    button = NULL;
+
     SDL_DestroyTexture(background_Texture);
     background_Texture = NULL;
     SDL_DestroyTexture(P1_HpBar);
@@ -85,6 +101,7 @@ void EndGame(){
     window = NULL;
 
     IMG_Quit();
+    Mix_CloseAudio();
     SDL_Quit();
     return;
 }

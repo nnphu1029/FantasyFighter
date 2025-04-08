@@ -3,6 +3,7 @@
 SDL_Texture* P1_SelectHero = NULL;
 SDL_Texture* P2_SelectHero = NULL;
 SDL_Texture* SelectMap = NULL;
+Mix_Music* MenuBackGroundMusic;
 
 void initMenu(){
     check = true;
@@ -29,6 +30,14 @@ void initMenu(){
         cout << "Load Texture Failed: " << "SelectMap" << endl;
         check = false;
         return;
+    }
+    MenuBackGroundMusic = Mix_LoadMUS("sound/menu.ogg");
+    if (!MenuBackGroundMusic) {
+        cout << "Could not load Menu music" << endl;
+        return;
+    }
+    else{
+        Mix_PlayMusic(MenuBackGroundMusic, -1);
     }
 }
 
@@ -61,6 +70,7 @@ void RenderMenu(){
             }
             if(FantasyFighter.type == SDL_KEYDOWN){
                 if(CheckPause == true){
+                    Mix_PlayChannel(-1, button, 0);
                     switch(FantasyFighter.key.keysym.sym){
                         case SDLK_UP:
                             PauseMenuState = min(PauseMenuState - 1 , 0);
@@ -83,6 +93,7 @@ void RenderMenu(){
                     }
                 }
                 else{
+                    Mix_PlayChannel(-1, button, 0);
                     if(checkPlayer1Select == false){
                         switch (FantasyFighter.key.keysym.sym){
                             case SDLK_ESCAPE:
@@ -216,6 +227,9 @@ void loadingMap(int code){
 }
 
 void closeMenu(){
+    Mix_FreeMusic(MenuBackGroundMusic);
+    MenuBackGroundMusic = NULL;
+
     SDL_DestroyTexture(background_Texture);
     background_Texture = NULL;
 

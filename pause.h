@@ -1,6 +1,8 @@
 #ifndef PAUSE_H
 #define PAUSE_H
 
+//CONTAIN PAUSE FUNCTION
+
 #include<string>
 #include<SDL.h>
 #include "Object.h"
@@ -22,12 +24,16 @@ const SDL_Rect PauseButton[3] = {
     {470,225,250,60} , {470,290,250,60} ,  {470,355,250,60}
 };
 
+//LOADING PAUSE RESOURCES
 void initPause();
 
+//KEYPRESS PROCESSING IN PAUSEMENU
 void PauseKeyPressProcess(bool&);
 
+//RENDER PAUSE
 void renderPause();
 
+//DELETE PAUSE RESOURCES
 void closePause();
 
 #endif // PAUSE_H

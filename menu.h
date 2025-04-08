@@ -1,9 +1,12 @@
 #ifndef MENU_H
 #define MENU_H
 
-#include<string>
-#include<SDL.h>
-#include<cstdlib>
+//CONTAIN MENU FUNCTION
+
+#include <string>
+#include <SDL.h>
+#include <SDL_mixer.h>
+#include <cstdlib>
 #include "Object.h"
 #include "init.h"
 #include "Opening.h"
@@ -27,12 +30,16 @@ extern bool CheckPause;
 extern int PauseMenuState;
 
 
-
+//LOADING MENU RESOURCES
 void initMenu();
+
+//RENDER MENU
 void RenderMenu();
 
+//LOADING MAP AFTER MENU
 void loadingMap(int);
 
+//DELETE MENU RESOURCES
 void closeMenu();
 
 #endif // MENU_H
