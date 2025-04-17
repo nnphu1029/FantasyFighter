@@ -3,7 +3,33 @@
 "Mỗi thế hệ, mỗi chủng tộc trên vùng đất Fantasy này, đều có những người được gọi là huyền thoại. Họ là những chiến binh mang trong mình sức mạnh phi thường – không vì danh vọng, mà vì niềm tin, lý tưởng, và khát vọng vượt qua chính bản thân mình. Họ cùng tham gia giải đấu này vì những mục đích cao cả. Thế nhưng... chỉ một người sẽ bước ra với vinh quang tối thượng. Liệu đó có phải là bạn?".
 # Giới thiệu
 FantasyFighter là một game đối kháng 2D đồ hoạ pixel được lấy cảm hứng từ lối chơi của 2 tựa game "Naruto vs Bleach" và "Brawhalla". Nhập vai vào một trong các người hùng của vùng đất Fantasy, nhiệm vụ của bạn là tham gia vào các trận chiến sinh tử để chứng minh thực lực bản thân và dành lấy "hào quang rực rỡ". 
-# Một vài hình ảnh của game:
+# Điều khiển
+Menu:
+  Player1: 
+    W , A , S , D - ĐIỀU KHIỂN
+    J - CHỌN
+  Player2:
+    ← ↑ → ↓ - ĐIỀU KHIỂN
+    4 (NUMPAD) - CHỌN
+  Map:
+    W , A , S , D - ĐIỀU KHIỂN
+    4 (NUMPAD) - CHỌN
+Main game:
+  Player1:
+    A , D - DI CHUYỂN
+    W - NHẢY 
+    S - BLOCK
+    J - ĐÁNH THƯỜNG 
+    U - SPECIAL SKILL
+    L - LƯỚT
+  Player2:
+    ← →  - DI CHUYỂN
+    ↑ - NHẢY 
+    ↓ - BLOCK
+    4 (NUMPAD) - ĐÁNH THƯỜNG
+    7 (NUMPAD) - SPECIAL SKILL
+    6 (NUMPAD) - LƯỚT
+# Một vài hình ảnh của game
 ![Screenshot 2025-04-17 164231](https://github.com/user-attachments/assets/b2690170-4c13-4e08-a7d0-caa59876aa30)
 ![Screenshot 2025-04-17 164419](https://github.com/user-attachments/assets/5e3a9e32-973c-423c-b66b-9fbe7f3c0bd7)
 ![Screenshot 2025-04-17 164908](https://github.com/user-attachments/assets/5764693a-1159-40f4-ad74-e9303719c7e0)
