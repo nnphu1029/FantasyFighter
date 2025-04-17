@@ -4,31 +4,31 @@
 # Giới thiệu
 FantasyFighter là một game đối kháng 2D đồ hoạ pixel được lấy cảm hứng từ lối chơi của 2 tựa game "Naruto vs Bleach" và "Brawhalla". Nhập vai vào một trong các người hùng của vùng đất Fantasy, nhiệm vụ của bạn là tham gia vào các trận chiến sinh tử để chứng minh thực lực bản thân và dành lấy "hào quang rực rỡ". 
 # Điều khiển
-Menu:
-  Player1: 
-    W , A , S , D - ĐIỀU KHIỂN
-    J - CHỌN
-  Player2:
-    ← ↑ → ↓ - ĐIỀU KHIỂN
-    4 (NUMPAD) - CHỌN
-  Map:
-    W , A , S , D - ĐIỀU KHIỂN
-    4 (NUMPAD) - CHỌN
-Main game:
-  Player1:
-    A , D - DI CHUYỂN
-    W - NHẢY 
-    S - BLOCK
-    J - ĐÁNH THƯỜNG 
-    U - SPECIAL SKILL
-    L - LƯỚT
-  Player2:
-    ← →  - DI CHUYỂN
-    ↑ - NHẢY 
-    ↓ - BLOCK
-    4 (NUMPAD) - ĐÁNH THƯỜNG
-    7 (NUMPAD) - SPECIAL SKILL
-    6 (NUMPAD) - LƯỚT
+Menu:<br>
+  Player1:<br> 
+    W , A , S , D - ĐIỀU KHIỂN<br>
+    J - CHỌN<br>
+  Player2:<br>
+    ← ↑ → ↓ - ĐIỀU KHIỂN<br>
+    4 (NUMPAD) - CHỌN<br>
+  Map:<br>
+    W , A , S , D - ĐIỀU KHIỂN<br>
+    4 (NUMPAD) - CHỌN<br>
+Main game:<br>
+  Player1:<br>
+    A , D - DI CHUYỂN<br>
+    W - NHẢY <br>
+    S - BLOCK<br>
+    J - ĐÁNH THƯỜNG<br> 
+    U - SPECIAL SKILL<br>
+    L - LƯỚT<br>
+  Player2:<br>
+    ← →  - DI CHUYỂN<br>
+    ↑ - NHẢY <br>
+    ↓ - BLOCK<br>
+    4 (NUMPAD) - ĐÁNH THƯỜNG<br>
+    7 (NUMPAD) - SPECIAL SKILL<br>
+    6 (NUMPAD) - LƯỚT<br>
 # Một vài hình ảnh của game
 ![Screenshot 2025-04-17 164231](https://github.com/user-attachments/assets/b2690170-4c13-4e08-a7d0-caa59876aa30)
 ![Screenshot 2025-04-17 164419](https://github.com/user-attachments/assets/5e3a9e32-973c-423c-b66b-9fbe7f3c0bd7)
