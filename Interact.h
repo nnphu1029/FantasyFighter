@@ -43,6 +43,8 @@ bool checkStateAttack(int);
 //GET DAME AND SPECIAL SKILL EFFECT
 void checkHit();
 
+void calculateDame(int& ,int& ,  int);
+
 //RENDER HPBAR AND AVATAR AFTER ZOOM
 void renderHPBar(int , int);
 void renderAvatar(int);

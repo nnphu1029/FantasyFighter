@@ -24,6 +24,7 @@ class Object{
         bool checkHurt;
         bool checkAttack;
         bool checkAirBorne;
+        bool checkKnockBack;
         int beginCastTime , endCastTime;
         int startCooldown , checkCooldown;
         int coolDownShield;
@@ -48,6 +49,11 @@ class Object{
         SDL_Rect mainBody;
         bool checkIf_I_Win;
         int Status , HP , Direction , limitLeft , limitRight;
+        bool checkCast1;
+        bool checkCast2;
+        bool checkCast3;
+        bool checkCastA;
+        bool checkCastSP;
 // DEFENITE OBJECT
         Object(int);
         void setInitPlayer(int);
@@ -69,6 +75,7 @@ class Object{
         void Block();
     //BAD STATUS FUNCTION
         void Hurt(int);
+        void KnockBack(int);
         void AirBorne(int);
         void ShieldBreak(int);
         void Dead();

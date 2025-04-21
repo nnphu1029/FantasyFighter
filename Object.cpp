@@ -35,6 +35,15 @@ void Object::AirBorne(int dame){
     checkAirBorne = true;
     Jump();
 }
+void Object::KnockBack(int dame){
+    if(checkKnockBack == true) return;
+    HP = max(HP - dame,0);
+    Status = MOVEMENT_HURT;
+    frame = FRAMERESET;
+    checkAttack = false;
+    checkKnockBack = true;
+    veloX = 0.0;
+}
 
 void Object::ShieldBreak(int dame){
     Hurt(dame);
@@ -106,6 +115,7 @@ void Object::castAttack(){
             frame = frame - 1;
         }
         else{
+            checkCast1 = false;
             checkAttack = false;
             return;
         }
@@ -116,6 +126,7 @@ void Object::castAttack(){
             frame = frame - 1;
         }
         else{
+            checkCast2 = false;
             checkAttack = false;
             return;
         }
@@ -126,6 +137,7 @@ void Object::castAttack(){
             frame = frame - 1;
         }
         else{
+            checkCast3 = false;
             checkAttack = false;
             return;
         }
@@ -136,6 +148,7 @@ void Object::castAttack(){
             frame = frame - 1;
         }
         else{
+            checkCastA = false;
             checkAttack = false;
             return;
         }
@@ -146,6 +159,7 @@ void Object::castAttack(){
             frame = frame - 2;
         }
         else{
+            checkCastSP = false;
             startCooldown = SDL_GetTicks();
             checkAttack = false;
             return;
@@ -267,6 +281,13 @@ void Object::movementUpdate(int frameWidth , int frameHeight, int type){
                 }
                 else{
                     checkAirBorne = false;
+                }
+            }
+            else if(checkKnockBack == true){
+                veloX = veloX - 5*Direction;
+                if(veloX == -30*Direction){
+                    checkKnockBack = false;
+                    veloX = 0;
                 }
             }
             else if(checkHurt == true){
@@ -528,7 +549,12 @@ void Object::setInitPlayer(int type){
     checkHurt = false;
     checkAttack = false;
     checkAirBorne = false;
-
+    checkKnockBack = false;
+    checkCast1 = false;
+    checkCast2 = false;
+    checkCast3 = false;
+    checkCastA = false;
+    checkCastSP = false;
     coolDownShield = SDL_GetTicks();
     beginCastTime = SDL_GetTicks();
     startCooldown = SDL_GetTicks();

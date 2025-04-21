@@ -8,6 +8,29 @@ SDL_Texture* P1_ava = NULL;
 SDL_Texture* P2_ava = NULL;
 SDL_Rect WinnerCamera = {0,350,500,250};
 
+void renderHPBar(int hpFrame , int type) {
+    SDL_Rect renderObject = { 0 , hpFrame * 100 , 500 , 100};
+    if(type == 1){
+        SDL_Rect renderP1= { 0 , 0 , 500 , 100};
+        SDL_RenderCopy(gRenderer, P1_HpBar ,&renderObject , &renderP1);
+    }
+    else{
+        SDL_Rect renderP2 = { 700 , 0 , 500 , 100};
+        SDL_RenderCopy(gRenderer, P2_HpBar ,&renderObject , &renderP2);
+    }
+}
+
+void renderAvatar(int type){
+    if(type == 1){
+        SDL_Rect renderP1 = {0,0,95,95};
+        SDL_RenderCopy(gRenderer,P1_ava,NULL,&renderP1);
+    }
+    else{
+        SDL_Rect renderP2 = {scrWidth - 95,0,95,95};
+        SDL_RenderCopyEx(gRenderer,P2_ava,NULL,&renderP2,NULL,NULL,SDL_FLIP_HORIZONTAL);
+    }
+}
+
 bool MouseClick(SDL_Rect mouseZone){
     int x, y;
     SDL_GetMouseState(&x , &y);
@@ -85,16 +108,142 @@ bool checkStateAttack(int type){
     return false;
 }
 
+void calculateDame(int& dame , int& Status , int type){
+    if(type == 2){
+        switch (player2.Status){
+            case MOVEMENT_SPSKILL:
+                if(player2.checkCastSP == true){
+                    dame = 0;
+                }
+                else{
+                    dame = HeroData[player2.heroCode].SpecSkill.dame*
+                    (player2.getAttackFrame() >= HeroData[player2.heroCode].SpecSkill.TakeHitframe
+                 and player2.getAttackFrame() < HeroData[player2.heroCode].SpecSkill.numberFrame);
+                    if(dame != 0){
+                        player2.checkCastSP = true;
+                    }
+                }
+                Status = HeroData[player2.heroCode].SpecSkill.effect*
+                (player2.getAttackFrame() >= HeroData[player2.heroCode].SpecSkill.TakeHitframe);
+                break;
+            case MOVEMENT_AIRATTACK:
+                if(player2.checkCastA == true){
+                    dame = 0;
+                }
+                else{
+                    dame = HeroData[player2.heroCode].AirAttack.dame*
+                    (player2.getAttackFrame() >= HeroData[player2.heroCode].AirAttack.TakeHitframe
+                 and player2.getAttackFrame() < HeroData[player2.heroCode].AirAttack.numberFrame);
+                    if(dame != 0){
+                        player2.checkCastA = true;
+                    }
+                }
+                Status = HeroData[player2.heroCode].AirAttack.effect*
+                (player2.getAttackFrame() >= HeroData[player2.heroCode].AirAttack.TakeHitframe);
+                break;
+            default:
+                switch (player2.Status){
+                    case MOVEMENT_ATTACK1:
+                        if(player2.checkCast1 == true){
+                            dame = 0;
+                        }
+                        else{
+                            dame = HeroData[player2.heroCode].AttackFrame1.dame*
+                            (player2.getAttackFrame() >= HeroData[player2.heroCode].AttackFrame1.TakeHitframe
+                         and player2.getAttackFrame() < HeroData[player2.heroCode].AttackFrame1.numberFrame);
+                            if(dame != 0){
+                                player2.checkCast1 = true;
+                            }
+                        }
+                        Status = HeroData[player2.heroCode].AttackFrame1.effect*
+                        (player2.getAttackFrame() >= HeroData[player2.heroCode].AttackFrame1.TakeHitframe);
+                        break;
+                    case MOVEMENT_ATTACK2:
+
+                        dame = HeroData[player2.heroCode].AttackFrame1.dame * (player2.getAttackFrame() == HeroData[player2.heroCode].AttackFrame1.TakeHitframe);
+                        dame = HeroData[player2.heroCode].AttackFrame2.dame * (player2.getAttackFrame() == HeroData[player2.heroCode].AttackFrame2.TakeHitframe);
+                        Status = HeroData[player2.heroCode].AttackFrame2.effect*
+                        (player2.getAttackFrame() >= HeroData[player2.heroCode].AttackFrame2.TakeHitframe);
+                        break;
+                    case MOVEMENT_ATTACK3:
+                        dame = HeroData[player2.heroCode].AttackFrame1.dame * (player2.getAttackFrame() == HeroData[player2.heroCode].AttackFrame1.TakeHitframe);
+                        dame = HeroData[player2.heroCode].AttackFrame2.dame * (player2.getAttackFrame() == HeroData[player2.heroCode].AttackFrame2.TakeHitframe);
+                        dame = HeroData[player2.heroCode].AttackFrame3.dame * (player2.getAttackFrame() == HeroData[player2.heroCode].AttackFrame3.TakeHitframe);
+                        Status = HeroData[player2.heroCode].AttackFrame3.effect*
+                        (player2.getAttackFrame() >= HeroData[player2.heroCode].AttackFrame3.TakeHitframe);
+                        break;
+                }
+                break;
+        }
+    }
+    else{
+        switch (player1.Status){
+            case MOVEMENT_SPSKILL:
+                if(player1.checkCastSP == true){
+                    dame = 0;
+                }
+                else{
+                    dame = HeroData[player2.heroCode].SpecSkill.dame*
+                    (player1.getAttackFrame() > HeroData[player1.heroCode].SpecSkill.TakeHitframe
+                 and player1.getAttackFrame() < HeroData[player1.heroCode].SpecSkill.numberFrame);
+                    if(dame != 0){
+                        player1.checkCastSP = true;
+                    }
+                }
+                Status = HeroData[player1.heroCode].SpecSkill.effect*
+                (player1.getAttackFrame() >= HeroData[player1.heroCode].SpecSkill.TakeHitframe);
+                break;
+            case MOVEMENT_AIRATTACK:
+                if(player1.checkCastA == true){
+                    dame = 0;
+                }
+                else{
+                    dame = HeroData[player1.heroCode].AirAttack.dame*
+                    (player1.getAttackFrame() >= HeroData[player1.heroCode].AirAttack.TakeHitframe
+                 and player1.getAttackFrame() < HeroData[player1.heroCode].AirAttack.numberFrame);
+                    if(dame != 0){
+                        player2.checkCastA = true;
+                    }
+                }
+                Status = HeroData[player1.heroCode].AirAttack.effect*
+                (player1.getAttackFrame() >= HeroData[player1.heroCode].AirAttack.TakeHitframe);
+                break;
+            default:
+                switch (player1.Status){
+                    case MOVEMENT_ATTACK1:
+                        dame = HeroData[player1.heroCode].AttackFrame1.dame * (player1.getAttackFrame() == HeroData[player1.heroCode].AttackFrame1.TakeHitframe);
+                        Status = HeroData[player1.heroCode].AttackFrame1.effect*
+                        (player1.getAttackFrame() >= HeroData[player1.heroCode].AttackFrame1.TakeHitframe);
+                        break;
+                    case MOVEMENT_ATTACK2:
+                        dame = HeroData[player1.heroCode].AttackFrame1.dame * (player1.getAttackFrame() == HeroData[player1.heroCode].AttackFrame1.TakeHitframe);
+                        dame = HeroData[player1.heroCode].AttackFrame2.dame * (player1.getAttackFrame() == HeroData[player1.heroCode].AttackFrame2.TakeHitframe);
+                        Status = HeroData[player1.heroCode].AttackFrame2.effect*
+                        (player1.getAttackFrame() >= HeroData[player1.heroCode].AttackFrame2.TakeHitframe);
+                        break;
+                    case MOVEMENT_ATTACK3:
+                        dame = HeroData[player1.heroCode].AttackFrame1.dame * (player1.getAttackFrame() == HeroData[player1.heroCode].AttackFrame1.TakeHitframe);
+                        dame = HeroData[player1.heroCode].AttackFrame2.dame * (player1.getAttackFrame() == HeroData[player1.heroCode].AttackFrame2.TakeHitframe);
+                        dame = HeroData[player1.heroCode].AttackFrame3.dame * (player1.getAttackFrame() == HeroData[player1.heroCode].AttackFrame3.TakeHitframe);
+                        Status = HeroData[player1.heroCode].AttackFrame3.effect*
+                        (player1.getAttackFrame() >= HeroData[player1.heroCode].AttackFrame3.TakeHitframe);
+                        break;
+                }
+                break;
+        }
+    }
+}
+
 void checkHit(){
     if(checkStateAttack(1) and checkStateAttack(2)){
         if(SDL_HasIntersection(&player1.hitbox,&player2.hitbox)){
-            if((player2.getAttackFrame() >= HeroData[player1.heroCode].SpecSkill.TakeHitframe)
-                or (player2.getAttackFrame() >= HeroData[player1.heroCode].AirAttack.TakeHitframe)
-                or (player2.getAttackFrame() >= HeroData[player1.heroCode].AttackFrame1.TakeHitframe)
-                or (player2.getAttackFrame() >= HeroData[player1.heroCode].AttackFrame2.TakeHitframe)
-                or (player2.getAttackFrame() >= HeroData[player1.heroCode].AttackFrame3.TakeHitframe)){
-                player1.AirBorne(5);
-                player2.AirBorne(5);
+            if((player2.getAttackFrame() == HeroData[player1.heroCode].SpecSkill.TakeHitframe)
+                or (player2.getAttackFrame() == HeroData[player1.heroCode].AirAttack.TakeHitframe)
+                or (player2.getAttackFrame() == HeroData[player1.heroCode].AttackFrame1.TakeHitframe)
+                or (player2.getAttackFrame() == HeroData[player1.heroCode].AttackFrame2.TakeHitframe)
+                or (player2.getAttackFrame() == HeroData[player1.heroCode].AttackFrame3.TakeHitframe)){
+                player1.KnockBack(1);
+                player2.KnockBack(1);
             }
             return;
         }
@@ -104,42 +253,7 @@ void checkHit(){
         int Status = 0;
         if(checkStateAttack(2)){
             if(SDL_HasIntersection(&player2.hitbox,&player1.mainBody)){
-                switch (player2.Status){
-                    case MOVEMENT_SPSKILL:
-                        dame = HeroData[player2.heroCode].SpecSkill.dame*
-                        (player2.getAttackFrame() == HeroData[player2.heroCode].SpecSkill.TakeHitframe);
-                        Status = HeroData[player2.heroCode].SpecSkill.effect*
-                        (player2.getAttackFrame() >= HeroData[player2.heroCode].SpecSkill.TakeHitframe);
-                        break;
-                    case MOVEMENT_AIRATTACK:
-                        dame = HeroData[player2.heroCode].AirAttack.dame*
-                        (player2.getAttackFrame() == HeroData[player2.heroCode].AirAttack.TakeHitframe);
-                        Status = HeroData[player2.heroCode].AirAttack.effect*
-                        (player2.getAttackFrame() >= HeroData[player2.heroCode].AirAttack.TakeHitframe);
-                        break;
-                    default:
-                        switch (player2.Status){
-                            case MOVEMENT_ATTACK1:
-                                dame = HeroData[player2.heroCode].AttackFrame1.dame * (player2.getAttackFrame() == HeroData[player2.heroCode].AttackFrame1.TakeHitframe);
-                                Status = HeroData[player2.heroCode].AttackFrame1.effect*
-                                (player2.getAttackFrame() >= HeroData[player2.heroCode].AttackFrame1.TakeHitframe);
-                                break;
-                            case MOVEMENT_ATTACK2:
-                                dame = HeroData[player2.heroCode].AttackFrame1.dame * (player2.getAttackFrame() == HeroData[player2.heroCode].AttackFrame1.TakeHitframe);
-                                dame = HeroData[player2.heroCode].AttackFrame2.dame * (player2.getAttackFrame() == HeroData[player2.heroCode].AttackFrame2.TakeHitframe);
-                                Status = HeroData[player2.heroCode].AttackFrame2.effect*
-                                (player2.getAttackFrame() >= HeroData[player2.heroCode].AttackFrame2.TakeHitframe);
-                                break;
-                            case MOVEMENT_ATTACK3:
-                                dame = HeroData[player2.heroCode].AttackFrame1.dame * (player2.getAttackFrame() == HeroData[player2.heroCode].AttackFrame1.TakeHitframe);
-                                dame = HeroData[player2.heroCode].AttackFrame2.dame * (player2.getAttackFrame() == HeroData[player2.heroCode].AttackFrame2.TakeHitframe);
-                                dame = HeroData[player2.heroCode].AttackFrame3.dame * (player2.getAttackFrame() == HeroData[player2.heroCode].AttackFrame3.TakeHitframe);
-                                Status = HeroData[player2.heroCode].AttackFrame3.effect*
-                                (player2.getAttackFrame() >= HeroData[player2.heroCode].AttackFrame3.TakeHitframe);
-                                break;
-                        }
-                        break;
-                }
+                calculateDame(dame , Status ,  2);
                 if(player1.Status == MOVEMENT_BLOCK and Status != SHIELD_BREAK){
                     dame = dame/2;
                 }
@@ -178,8 +292,15 @@ void checkHit(){
                         else player1.Hurt(dame);
                         break;
                     case NONE:
-                        if(dame != 0){
-                            player1.Hurt(dame);
+                        if(player1.Status == MOVEMENT_BLOCK){
+                            if(dame != 0){
+                                player1.HP = max(player1.HP - dame,0);
+                            }
+                        }
+                        else{
+                            if(dame != 0){
+                                player1.Hurt(dame);
+                            }
                         }
                         break;
                     default:
@@ -192,42 +313,7 @@ void checkHit(){
         else{
             if(checkStateAttack(1)){
                 if(SDL_HasIntersection(&player1.hitbox,&player2.mainBody)){
-                    switch (player1.Status){
-                        case MOVEMENT_SPSKILL:
-                            dame = HeroData[player1.heroCode].SpecSkill.dame*
-                            (player1.getAttackFrame() == HeroData[player1.heroCode].SpecSkill.TakeHitframe);
-                            Status = HeroData[player1.heroCode].SpecSkill.effect*
-                            (player1.getAttackFrame() >= HeroData[player1.heroCode].SpecSkill.TakeHitframe);
-                            break;
-                        case MOVEMENT_AIRATTACK:
-                            dame = HeroData[player1.heroCode].AirAttack.dame*
-                            (player1.getAttackFrame() == HeroData[player1.heroCode].AirAttack.TakeHitframe);
-                            Status = HeroData[player1.heroCode].AirAttack.effect*
-                            (player1.getAttackFrame() >= HeroData[player1.heroCode].AirAttack.TakeHitframe);
-                            break;
-                        default:
-                            switch (player1.Status){
-                                case MOVEMENT_ATTACK1:
-                                    dame = HeroData[player1.heroCode].AttackFrame1.dame * (player1.getAttackFrame() == HeroData[player1.heroCode].AttackFrame1.TakeHitframe);
-                                    Status = HeroData[player1.heroCode].AttackFrame1.effect*
-                                    (player1.getAttackFrame() >= HeroData[player1.heroCode].AttackFrame1.TakeHitframe);
-                                    break;
-                                case MOVEMENT_ATTACK2:
-                                    dame = HeroData[player1.heroCode].AttackFrame1.dame * (player1.getAttackFrame() == HeroData[player1.heroCode].AttackFrame1.TakeHitframe);
-                                    dame = HeroData[player1.heroCode].AttackFrame2.dame * (player1.getAttackFrame() == HeroData[player1.heroCode].AttackFrame2.TakeHitframe);
-                                    Status = HeroData[player1.heroCode].AttackFrame2.effect*
-                                    (player1.getAttackFrame() >= HeroData[player1.heroCode].AttackFrame2.TakeHitframe);
-                                    break;
-                                case MOVEMENT_ATTACK3:
-                                    dame = HeroData[player1.heroCode].AttackFrame1.dame * (player1.getAttackFrame() == HeroData[player1.heroCode].AttackFrame1.TakeHitframe);
-                                    dame = HeroData[player1.heroCode].AttackFrame2.dame * (player1.getAttackFrame() == HeroData[player1.heroCode].AttackFrame2.TakeHitframe);
-                                    dame = HeroData[player1.heroCode].AttackFrame3.dame * (player1.getAttackFrame() == HeroData[player1.heroCode].AttackFrame3.TakeHitframe);
-                                    Status = HeroData[player1.heroCode].AttackFrame3.effect*
-                                    (player1.getAttackFrame() >= HeroData[player1.heroCode].AttackFrame3.TakeHitframe);
-                                    break;
-                            }
-                            break;
-                    }
+                    calculateDame(dame , Status , 1);
                     if(player2.Status == MOVEMENT_BLOCK and Status != SHIELD_BREAK){
                         dame = dame/2;
                     }
@@ -265,8 +351,15 @@ void checkHit(){
                             else player2.Hurt(dame);
                             break;
                         case NONE:
-                            if(dame != 0){
-                                player2.Hurt(dame);
+                            if(player2.Status == MOVEMENT_BLOCK){
+                                if(dame != 0){
+                                    player2.HP = max(player2.HP - dame,0);
+                                }
+                            }
+                            else{
+                                if(dame != 0){
+                                    player2.Hurt(dame);
+                                }
                             }
                             break;
                         default:
@@ -281,25 +374,4 @@ void checkHit(){
     return;
 }
 
-void renderHPBar(int hpFrame , int type) {
-    SDL_Rect renderObject = { 0 , hpFrame * 100 , 500 , 100};
-    if(type == 1){
-        SDL_Rect renderP1= { 0 , 0 , 500 , 100};
-        SDL_RenderCopy(gRenderer, P1_HpBar ,&renderObject , &renderP1);
-    }
-    else{
-        SDL_Rect renderP2 = { 700 , 0 , 500 , 100};
-        SDL_RenderCopy(gRenderer, P2_HpBar ,&renderObject , &renderP2);
-    }
-}
 
-void renderAvatar(int type){
-    if(type == 1){
-        SDL_Rect renderP1 = {0,0,95,95};
-        SDL_RenderCopy(gRenderer,P1_ava,NULL,&renderP1);
-    }
-    else{
-        SDL_Rect renderP2 = {scrWidth - 95,0,95,95};
-        SDL_RenderCopyEx(gRenderer,P2_ava,NULL,&renderP2,NULL,NULL,SDL_FLIP_HORIZONTAL);
-    }
-}

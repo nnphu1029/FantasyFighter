@@ -121,7 +121,7 @@ const HeroSpec HeroData[10] = {
        8 , 3 , 7 ,  5 ,   6 , 15  , {265 , 82, 35, 75},
         {{231 , 63 , 128, 79} , 7 , 5 , 3 , NONE , "sound/HeavyWeapon.wav"},
         {{340 , 94 , 37 , 75} , 14, 5 , 10 , NONE , "sound/HeavyWeapon.wav"},
-        {{410 , 57 , 121, 101} , 26, 10 , 17 , SHIELD_BREAK , "sound/Explosion.wav"},
+        {{410 , 57 , 121, 101} , 26, 10 , 18 , SHIELD_BREAK , "sound/Explosion.wav"},
         {{294 , 45 , 66 , 109} , 8 , 15 , 3 , NONE , "sound/HeavyWeapon.wav"},
         {{306 , 32 , 230,125} , 15, 25 , 8 , AIRBORNE , "sound/Explosion.wav"}
     },
@@ -129,7 +129,7 @@ const HeroSpec HeroData[10] = {
        8 , 3 , 6 ,  5 ,   6 , 16  , {266,92,35,71},
         {{370, 103 , 58 , 25} , 7 , 6 , 3 , NONE ,"sound/daggerSlash.wav"},
         {{336, 97 , 112 , 36} , 20 , 6 , 14 , NONE , "sound/daggerSlash.wav"},
-        {{385 , 68 , 76 , 95} , 26, 20 , 21 , AIRBORNE , "sound/daggerSlash.wav"},
+        {{385 , 68 , 76 , 95} , 26, 20 , 22 , AIRBORNE , "sound/daggerSlash.wav"},
         {{323,80,121,28} , 8 , 20 , 3 , NONE , "sound/Water.wav"},
         {{345,3,78,162} , 26, 4 , 11 ,HARASS , "sound/Water.wav"}
     },
